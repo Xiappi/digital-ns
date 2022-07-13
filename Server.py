@@ -1,14 +1,18 @@
 import asyncio
 import websockets
 
+async def hello(websocket):
+    name = await websocket.recv()
+    print(f"<<< {name}")
 
-async def echo(websocket):
-    async for message in websocket:
-        await websocket.send(message)
+    greeting = f"Hello {name}!"
 
+    await websocket.send(greeting)
+    print(f">>> {greeting}")
 
 async def main():
-    async with websockets.serve(echo, "localhost", 8765):
+    async with websockets.serve(hello, "localhost", 8765):
         await asyncio.Future()  # run forever
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
