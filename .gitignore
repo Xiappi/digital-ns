@@ -42,3 +42,8 @@ dist
 *.egg-info/
 *.so
 __pycache__
+
+[L][l]ib
+[S][s]cripts
+
+*.cfg
