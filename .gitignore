@@ -43,7 +43,7 @@ dist
 *.so
 __pycache__
 
-[L][l]ib
-[S][s]cripts
+Lib/
+Scripts/
 
 *.cfg
