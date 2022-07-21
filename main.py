@@ -1,12 +1,12 @@
 import pygame
 import sys
+from InputHandler import InputHandler
+from PhysicsEngine import PhysicsEngine
+from Spawner import Spawner
 from Shape import Shape
 from Globals import WIDTH, HEIGHT, FPS
 
-
 pygame.init()
-
-# CONSTANTS
 
 
 displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -16,15 +16,11 @@ FramePerSec = pygame.time.Clock()
 # CREATE SHAPE
 all_sprites = pygame.sprite.Group()
 
-s1 = Shape()
-all_sprites.add(s1)
-
+physics = PhysicsEngine()
+spawner = Spawner()
+inputHandler = InputHandler()
 
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
 
     displaysurface.fill((0, 0, 0))
 
@@ -33,4 +29,14 @@ while True:
 
     pygame.display.update()
     FramePerSec.tick(FPS)
-    s1.move()
+
+    newShape = spawner.handle()
+
+    if(newShape):
+        all_sprites.add(newShape)
+
+    physics.update(all_sprites)
+    x = inputHandler.handle()
+
+    # let pygame handle events we don't process
+    pygame.event.pump()
