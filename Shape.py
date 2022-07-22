@@ -11,7 +11,10 @@ class Shape(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.surf = pygame.Surface((SHAPE_WIDTH, SHAPE_WIDTH))
-        self.surf.fill((128, 255, 40))
+
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        self.surf.fill(color)
         self.rect = self.surf.get_rect(center=(10, 420))
 
         self.pos = vec((200, 200))
