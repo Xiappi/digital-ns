@@ -1,3 +1,4 @@
+from turtle import shape
 import pygame
 import random
 from pygame.math import Vector2 as vec
@@ -6,22 +7,32 @@ from Globals import WIDTH, HEIGHT
 ACC = 5
 SHAPE_WIDTH = 30
 
+WHITE = (255, 255, 255)
+
 
 class Shape(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.surf = pygame.Surface((SHAPE_WIDTH, SHAPE_WIDTH))
 
-        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        self.height = SHAPE_WIDTH
+        self.width = SHAPE_WIDTH
+        self.radius = 10
 
-        self.surf.fill(color)
-        self.rect = self.surf.get_rect(center=(10, 420))
+        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        self.surf.fill(self.color) 
+        self.image = self.surf
+        self.image.fill(WHITE)    
+        self.image.set_colorkey(WHITE)   
 
         self.pos = vec((200, 200))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
         self.friction = -0.12
+
+        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
 
     def move(self):
 
