@@ -2,12 +2,11 @@ import asyncio
 import websockets
 
 
-
 async def hello():
     uri = "ws://localhost:8765"
     async with websockets.connect(uri) as websocket:
-        name = input("What's your name? ")
 
+        name = "adam"
         await websocket.send(name)
         print(f">>> {name}")
 
@@ -15,4 +14,5 @@ async def hello():
         print(f"<<< {greeting}")
 
 if __name__ == "__main__":
+
     asyncio.run(hello())
