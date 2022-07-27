@@ -13,15 +13,16 @@ WHITE = (255, 255, 255)
 class Shape(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = pygame.Surface((SHAPE_WIDTH, SHAPE_WIDTH))
-
+        
         self.height = SHAPE_WIDTH
         self.width = SHAPE_WIDTH
         self.radius = 10
 
         self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
+        self.surf = pygame.Surface((SHAPE_WIDTH, SHAPE_WIDTH))
         self.surf.fill(self.color) 
+
         self.image = self.surf
         self.image.fill(WHITE)    
         self.image.set_colorkey(WHITE)   
