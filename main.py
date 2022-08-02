@@ -7,13 +7,13 @@ from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 from Shape import Shape
-from Globals import WIDTH, HEIGHT, FPS
+from Globals import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
 
 def startGame():
 
     pygame.init()
 
-    displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
+    displaysurface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("Game")
     FramePerSec = pygame.time.Clock()
 

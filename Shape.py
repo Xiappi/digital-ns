@@ -2,7 +2,7 @@ from turtle import shape
 import pygame
 import random
 from pygame.math import Vector2 as vec
-from Globals import WIDTH, HEIGHT
+from Globals import WINDOW_WIDTH, WINDOW_HEIGHT
 
 ACC = 5
 WHITE = (255, 255, 255)
@@ -13,12 +13,12 @@ class Shape(pygame.sprite.Sprite):
         super().__init__()
         
         self.radius = random.randint(5, 10)
-        self.height = self.radius * 2
-        self.width = self.radius * 2
+        self.WINDOW_HEIGHT = self.radius * 2
+        self.WINDOW_WIDTH = self.radius * 2
 
         self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        self.surf = pygame.Surface((self.height, self.width))
+        self.surf = pygame.Surface((self.WINDOW_HEIGHT, self.WINDOW_WIDTH))
         self.surf.fill(self.color) 
 
         self.image = self.surf
@@ -31,7 +31,7 @@ class Shape(pygame.sprite.Sprite):
 
         self.friction = -0.12
 
-        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
+        self.rect = pygame.draw.circle(self.image, self.color, (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//2), self.radius)
 
     def move(self):
 
@@ -43,11 +43,11 @@ class Shape(pygame.sprite.Sprite):
         # self.vel += self.acc
         self.pos += self.vel
 
-        if self.pos.x + self.getBound() >= WIDTH or self.pos.x - self.getBound() <= 0:
+        if self.pos.x + self.getBound() >= WINDOW_WIDTH or self.pos.x - self.getBound() <= 0:
             self.acc.x = -self.acc.x
             self.vel.x = -self.vel.x
 
-        if self.pos.y + self.getBound() >= HEIGHT or self.pos.y - self.getBound() <= 0:
+        if self.pos.y + self.getBound() >= WINDOW_HEIGHT or self.pos.y - self.getBound() <= 0:
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
@@ -61,11 +61,11 @@ class Shape(pygame.sprite.Sprite):
         return self.radius * 2
 
     def redraw(self):
-        self.height = self.radius * 2
-        self.width = self.radius * 2
-        self.surf = pygame.Surface((self.height, self.width))
+        self.WINDOW_HEIGHT = self.radius * 2
+        self.WINDOW_WIDTH = self.radius * 2
+        self.surf = pygame.Surface((self.WINDOW_HEIGHT, self.WINDOW_WIDTH))
         self.image = self.surf
 
         # Make sure that when it's redrawn, it's kept in bounds
 
-        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
+        self.rect = pygame.draw.circle(self.image, self.color, (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//2), self.radius)
