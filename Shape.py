@@ -13,12 +13,12 @@ class Shape(pygame.sprite.Sprite):
         super().__init__()
         
         self.radius = random.randint(5, 10)
-        self.WINDOW_HEIGHT = self.radius * 2
-        self.WINDOW_WIDTH = self.radius * 2
+        self.height = self.radius * 2
+        self.width = self.radius * 2
 
         self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        self.surf = pygame.Surface((self.WINDOW_HEIGHT, self.WINDOW_WIDTH))
+        self.surf = pygame.Surface((self.height, self.width))
         self.surf.fill(self.color) 
 
         self.image = self.surf
@@ -31,7 +31,7 @@ class Shape(pygame.sprite.Sprite):
 
         self.friction = -0.12
 
-        self.rect = pygame.draw.circle(self.image, self.color, (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//2), self.radius)
+        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
 
     def move(self):
 
@@ -51,21 +51,21 @@ class Shape(pygame.sprite.Sprite):
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
-        self.rect.midbottom = self.pos
+        self.rect.center = self.pos
 
     def randomize(self):
         self.acc.x = -ACC * random.random()
         self.acc.y = -ACC * random.random()
 
     def getBound(self):
-        return self.radius * 2
+        return self.radius
 
     def redraw(self):
-        self.WINDOW_HEIGHT = self.radius * 2
-        self.WINDOW_WIDTH = self.radius * 2
-        self.surf = pygame.Surface((self.WINDOW_HEIGHT, self.WINDOW_WIDTH))
+        self.height = self.radius * 2
+        self.width = self.radius * 2
+        self.surf = pygame.Surface((self.height, self.width))
         self.image = self.surf
 
         # Make sure that when it's redrawn, it's kept in bounds
 
-        self.rect = pygame.draw.circle(self.image, self.color, (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//2), self.radius)
+        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
