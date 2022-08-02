@@ -11,25 +11,41 @@ class PhysicsEngine():
                 if shape1 != shape2:
                     if pygame.sprite.collide_rect(shape1, shape2):
                         
-                        # 0,0 is top left
-
-                        #TODO: Determine the direction of each shape based on their current direction
-
-                        #If Shape one is more to the left than shape 2
-                        if shape1.pos.x < shape2.pos.x:
-                            # Shape 1 Go left
-                            shape1.acc.x = -abs(shape1.acc.x)
-                            shape1.vel.x = -abs(shape1.vel.x)
-                            # Shape 2 go right
-                            shape2.acc.x = abs(shape2.acc.x)
-                            shape2.vel.x = abs(shape2.vel.x)
-                        else:
-                            # Shape 1 Go right
-                            shape1.acc.x = abs(shape1.acc.x)
-                            shape1.vel.x = abs(shape1.vel.x)
-                            # Shape 2 go left
-                            shape2.acc.x = -abs(shape2.acc.x)
-                            shape2.vel.x = -abs(shape2.vel.x)
-                        
+                        bounce()
 
             shape1.move()
+
+
+def bounce(shape1, shape2):
+
+    # 0,0 is top left
+    #If Shape one is more to the left than shape 2
+    if shape1.pos.x < shape2.pos.x:
+        # Shape 1 Go left
+        shape1.acc.x = -abs(shape1.acc.x)
+        shape1.vel.x = -abs(shape1.vel.x)
+        # Shape 2 go right
+        shape2.acc.x = abs(shape2.acc.x)
+        shape2.vel.x = abs(shape2.vel.x)
+    else:
+        # Shape 1 Go right
+        shape1.acc.x = abs(shape1.acc.x)
+        shape1.vel.x = abs(shape1.vel.x)
+        # Shape 2 go left
+        shape2.acc.x = -abs(shape2.acc.x)
+        shape2.vel.x = -abs(shape2.vel.x)
+    
+    if shape1.pos.y < shape2.pos.y:
+        # Shape 1 Go left
+        shape1.acc.y = -abs(shape1.acc.y)
+        shape1.vel.y = -abs(shape1.vel.y)
+        # Shape 2 go right
+        shape2.acc.y = abs(shape2.acc.y)
+        shape2.vel.y = abs(shape2.vel.y)
+    else:
+        # Shape 1 Go right
+        shape1.acc.y = abs(shape1.acc.y)
+        shape1.vel.y = abs(shape1.vel.y)
+        # Shape 2 go left
+        shape2.acc.y = -abs(shape2.acc.y)
+        shape2.vel.y = -abs(shape2.vel.y)
