@@ -10,11 +10,23 @@ class PhysicsEngine():
             for shape2 in shapeGroup:
                 if shape1 != shape2:
                     if pygame.sprite.collide_rect(shape1, shape2):
-                        
-                        bounce()
+
+                        consume(shape1, shape2)
 
             shape1.move()
 
+
+def consume(shape1, shape2):
+    if shape1.radius > shape2.radius:
+        shape1.radius += shape2.radius
+        shape1.redraw()
+        shape2.kill()
+    elif shape2.radius > shape1.radius:
+        shape2.radius += shape1.radius
+        shape2.redraw()
+        shape1.kill()
+    else:
+        bounce(shape1, shape2)
 
 def bounce(shape1, shape2):
 
@@ -36,16 +48,16 @@ def bounce(shape1, shape2):
         shape2.vel.x = -abs(shape2.vel.x)
     
     if shape1.pos.y < shape2.pos.y:
-        # Shape 1 Go left
+        # Shape 1 Go down
         shape1.acc.y = -abs(shape1.acc.y)
         shape1.vel.y = -abs(shape1.vel.y)
-        # Shape 2 go right
+        # Shape 2 go up
         shape2.acc.y = abs(shape2.acc.y)
         shape2.vel.y = abs(shape2.vel.y)
     else:
-        # Shape 1 Go right
+        # Shape 1 Go up
         shape1.acc.y = abs(shape1.acc.y)
         shape1.vel.y = abs(shape1.vel.y)
-        # Shape 2 go left
+        # Shape 2 go down
         shape2.acc.y = -abs(shape2.acc.y)
         shape2.vel.y = -abs(shape2.vel.y)
