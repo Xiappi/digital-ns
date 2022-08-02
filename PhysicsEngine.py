@@ -9,7 +9,7 @@ class PhysicsEngine():
         for shape1 in shapeGroup:
             for shape2 in shapeGroup:
                 if shape1 != shape2:
-                    if pygame.sprite.collide_rect(shape1, shape2):
+                    if pygame.sprite.collide_circle(shape1, shape2):
 
                         consume(shape1, shape2)
 
