@@ -2,7 +2,7 @@ from turtle import shape
 import pygame
 import random
 from pygame.math import Vector2 as vec
-import Globals
+from Globals import *
 
 ACC = 5
 WHITE = (255, 255, 255)
@@ -25,7 +25,7 @@ class Shape(pygame.sprite.Sprite):
         self.image.fill(WHITE)    
         self.image.set_colorkey(WHITE)  
 
-        self.pos = vec((200, 200))
+        self.pos = vec((750, 750))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
@@ -43,11 +43,11 @@ class Shape(pygame.sprite.Sprite):
         # self.vel += self.acc
         self.pos += self.vel
 
-        if self.pos.x + self.getBound() >= Globals.ARENA_HEIGHT or self.pos.x - self.getBound() <= 0:
+        if self.pos.x + self.getBound() >= ARENA_WIDTH or self.pos.x - self.getBound() <= ARENA_OFFSET:
             self.acc.x = -self.acc.x
             self.vel.x = -self.vel.x
 
-        if self.pos.y + self.getBound() >= Globals.ARENA_HEIGHT or self.pos.y - self.getBound() <= 0:
+        if self.pos.y + self.getBound() >= ARENA_HEIGHT or self.pos.y - self.getBound() <= ARENA_OFFSET:
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
@@ -67,7 +67,6 @@ class Shape(pygame.sprite.Sprite):
         self.image = self.surf
 
         # Make sure that when it's redrawn, it's kept in bounds
-
         self.rect = pygame.draw.circle(
             self.image, self.color, (self.width//2, self.height//2), self.radius)
 

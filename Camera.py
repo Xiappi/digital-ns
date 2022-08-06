@@ -7,8 +7,7 @@ class Camera:
         self.object = obj
         self.offset = vec(0, 0)
         self.offset_float = vec(0, 0)
-        self.CONST = vec(-Globals.WINDOW_WIDTH / 2 +
-                         obj.rect.w / 2, -Globals.WINDOW_HEIGHT/2)
+        self.CONST = vec(-Globals.WINDOW_WIDTH / 2 , -Globals.WINDOW_HEIGHT/2)
 
     def setMethod(self, method):
         self.method = method

@@ -1,4 +1,5 @@
 from ast import PyCF_ALLOW_TOP_LEVEL_AWAIT
+from tkinter import OFF
 from turtle import back, window_height
 import pygame
 import sys
@@ -37,10 +38,6 @@ def startGame():
     camera.setMethod(follow)
 
     myShape.randomize()
-    # myShape.vel.x = 10
-    # myShape.vel.y = 10
-    # myShape.pos.x = 0
-    # myShape.pos.y = 0
 
     
     all_sprites.add(myShape)
@@ -72,16 +69,17 @@ def startGame():
         canvas.fill((0,0,0))
         window.fill((0, 0, 0))
 
-        # canvas.blit(background, (camera.offset.x - ARENA_WIDTH/2, camera.offset.y - ARENA_HEIGHT/2))
-        canvas.blit(background, (camera.offset.x - ARENA_WIDTH/2, camera.offset.y - ARENA_HEIGHT/2))
-    
+        canvas.blit(background, (ARENA_OFFSET - camera.offset.x - ARENA_WIDTH/2, ARENA_OFFSET - camera.offset.y - ARENA_HEIGHT/2)) 
+
+
         for entity in all_sprites:
             canvas.blit(entity.surf, (entity.rect.x - camera.offset.x, entity.rect.y - camera.offset.y))
 
-        # pygame.draw.rect(canvas, (255,0,0), pygame.Rect(camera.offset.x - ARENA_WIDTH/2, camera.offset.y - ARENA_HEIGHT/2, ARENA_WIDTH, ARENA_HEIGHT),  2)
+        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
         
         # ALWAYS DRAW CANVAS ON WINDOW LAST
         window.blit(canvas, (0,0))
+        print(camera.offset)
 
 threads = []
 
