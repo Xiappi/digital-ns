@@ -51,14 +51,14 @@ class Shape(pygame.sprite.Sprite):
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
-        self.rect.midbottom = self.pos
+        self.rect.center = self.pos
 
     def randomize(self):
         self.acc.x = -ACC * random.random()
         self.acc.y = -ACC * random.random()
 
     def getBound(self):
-        return self.radius * 2
+        return self.radius
 
     def redraw(self):
         self.height = self.radius * 2
@@ -74,3 +74,4 @@ class Shape(pygame.sprite.Sprite):
 
 
 
+        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
