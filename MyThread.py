@@ -3,7 +3,7 @@ import logging
 import threading
 import time
 import concurrent.futures
-from Game import startGame
+from ServerGame import startGame
 from Server import startServer
 
 

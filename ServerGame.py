@@ -2,6 +2,9 @@ import asyncio
 import threading
 import pygame
 import sys
+
+import EventTypes
+
 from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
@@ -15,7 +18,7 @@ def startGame():
     pygame.init()
 
     displaysurface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption("Game")
+    pygame.display.set_caption("Server")
     FramePerSec = pygame.time.Clock()
 
     # CREATE SHAPE
@@ -43,12 +46,16 @@ def startGame():
         physics.update(all_sprites)
         inputHandler.handle()
 
-        for event in pygame.event.get():
-            if event.type == pygame.event.custom_type() - 1:
-                print(str(event))
-                shap = Shape()
-                shap.randomize()
-                all_sprites.add(shap)
+        for event in pygame.event.get(EventTypes.GREETING):
+            print(str(event))
+            shap = Shape()
+            shap.randomize()
+            all_sprites.add(shap)
+
+        # Now post all of the current shapes
+        pygame.event.post(pygame.event.Event(
+            EventTypes.SHAPES, shapes=all_sprites
+        ))
 
         # let pygame handle events we don't process
         pygame.event.pump()

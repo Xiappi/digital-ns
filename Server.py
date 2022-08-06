@@ -1,18 +1,23 @@
 import asyncio
+from tkinter import EventType
 import pygame
 import websockets
-
+import EventTypes
 
 async def server(websocket):
-    name = await websocket.recv()
-    print(f"<<< {name}")
+    data = await websocket.recv()
+    print(f"<<< {data}")
 
-    greeting = f"Hello {name}!"
+    greeting = f"Hello: {data}!"
 
     pygame.event.post(pygame.event.Event(
-        pygame.event.custom_type(), message=greeting))
+        EventTypes.GREETING, message=greeting))
 
-    await websocket.send(greeting)
+    events = pygame.event.get(EventTypes.SHAPES)
+
+    for event in events:
+        for shape in event.shapes:
+            await websocket.send(f"{shape.pos.x},{shape.pos.y}")
 
 
 async def startServer():
