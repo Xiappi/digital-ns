@@ -2,7 +2,6 @@ import asyncio
 import pygame
 import websockets
 
-
 async def server(websocket):
     name = await websocket.recv()
     print(f"<<< {name}")
