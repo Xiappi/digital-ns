@@ -6,27 +6,26 @@ import EventTypes
 
 
 async def client(websocket):
-    name = "adam"
+    name = "Ping"
     await websocket.send(name)
-    print(f">>> {name} connected!")
 
-    while True:
-        try:
-            coords = await websocket.recv()
-            print(f"<<< {coords}")
+    coords = await websocket.recv()
+    print(f"<<< {coords}")
 
-            x = str(coords).split(",")[0]
-            y = str(coords).split(",")[1]
+    x = str(coords).split(",")[0]
+    y = str(coords).split(",")[1]
 
-            pygame.event.post(pygame.event.Event(
-            EventTypes.CREATE_SHAPE, coords=(x, y)))
-        except:
-            continue
+    pygame.event.post(pygame.event.Event(
+    EventTypes.CREATE_SHAPE, coords=(x, y)))
 
 async def hello():
     uri = "ws://localhost:8765"
-    async with websockets.connect(uri) as websocket:
-        await client(websocket)
+
+    async for websocket in websockets.connect(uri):
+        try:
+            await client(websocket)
+        except websocket.ConnectionClosed:
+            continue
 
 if __name__ == "__main__":
 
