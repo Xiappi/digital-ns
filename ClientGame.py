@@ -48,8 +48,8 @@ def startGame():
             print(str(event))
             shap = Shape()
             shap.randomize()
-            shap.pos.x = float(event.coords[0])
-            shap.pos.y = float(event.coords[1])
+            shap.pos.x = int(event.coords[0])
+            shap.pos.y = int(event.coords[1])
             all_sprites.add(shap)
 
         # let pygame handle events we don't process

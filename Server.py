@@ -10,11 +10,11 @@
 #     pygame.event.post(pygame.event.Event(
 #         EventTypes.GREETING, message=greeting))
 
-#     events = pygame.event.get(EventTypes.SHAPES)
-#     print("events: " + str(events))
-#     for event in events:
-#         for shape in event.shapes:
-#             await websocket.send(f"{shape.pos.x},{shape.pos.y}")
+    # events = pygame.event.get(EventTypes.SHAPES)
+    # print("events: " + str(events))
+    # for event in events:
+    #     for shape in event.shapes:
+    #         await websocket.send(f"{shape.pos.x},{shape.pos.y}")
 
 
 # async def startServer():
@@ -30,6 +30,7 @@
 
 import asyncio
 import pygame
+import EventTypes
 
 connections = set()
 backgroundTasks = set()
@@ -59,7 +60,12 @@ async def handleSending():
         for connection in connections:
             addr = connection.get_extra_info('peername')
             print(f"saying hi to {addr}")
-            connection.write(f"hi {addr}".encode())
+
+            events = pygame.event.get(EventTypes.SHAPES)
+            for shape in events[0].shapes:
+                connection.write(f"{round(shape.pos.x)},{round(shape.pos.y)}".encode())
+
+            #connection.write(f"hi {addr}".encode())
         await asyncio.sleep(.5)
 
 

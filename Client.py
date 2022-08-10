@@ -10,8 +10,18 @@ async def handleClient():
 
     # read while we server is up
     while not reader.at_eof():
-        data = await reader.read(100)
+        data = await reader.read(50)
         print(f'Received: {data.decode()!r}')
+
+        coords = data.decode()
+        print(f"<<< {coords}")
+
+        x = str(coords).split(",")[0]
+        y = str(coords).split(",")[1]
+
+        pygame.event.post(pygame.event.Event(
+        EventTypes.CREATE_SHAPE, coords=(x, y)))
+
         # TODO: check for exit input to stop gracefully
     print("client exiting")
 
@@ -21,14 +31,14 @@ if __name__ == "__main__":
 
 # async def client(websocket):
 
-#     coords = await websocket.recv()
-#     print(f"<<< {coords}")
+    # coords = await websocket.recv()
+    # print(f"<<< {coords}")
 
-#     # x = str(coords).split(",")[0]
-#     # y = str(coords).split(",")[1]
+    # # x = str(coords).split(",")[0]
+    # # y = str(coords).split(",")[1]
 
-#     # pygame.event.post(pygame.event.Event(
-#     # EventTypes.CREATE_SHAPE, coords=(x, y)))
+    # # pygame.event.post(pygame.event.Event(
+    # # EventTypes.CREATE_SHAPE, coords=(x, y)))
 
 # async def start():
 #     uri = "ws://localhost:8765"

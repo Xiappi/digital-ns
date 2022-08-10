@@ -25,7 +25,7 @@ class Shape(pygame.sprite.Sprite):
         self.image.fill(WHITE)    
         self.image.set_colorkey(WHITE)  
 
-        self.pos = vec((750, 750))
+        self.pos = vec((200, 200))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
