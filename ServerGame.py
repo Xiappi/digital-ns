@@ -10,7 +10,7 @@ from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 from Shape import Shape
 from Globals import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
-from Server import startServer
+from Server import main
 
 
 def startGame():
@@ -61,9 +61,12 @@ def startGame():
         pygame.event.pump()
 
 
-threads = []
 
-thread = threading.Thread(target=startGame, args=())
-thread.start()
+if __name__ == "__main__":
+    
+    threads = []
 
-asyncio.run(startServer())
+    thread = threading.Thread(target=startGame, args=())
+    thread.start()
+
+    asyncio.run(main())

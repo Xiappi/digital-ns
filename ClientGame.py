@@ -1,6 +1,5 @@
 import asyncio
 import threading
-from tkinter import EventType
 import pygame
 import sys
 
@@ -10,12 +9,11 @@ from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 from Shape import Shape
-from Globals import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
-from Client import hello
-
+from Globals import *
+from Client import handleClient
 
 def startGame():
-
+    isRunning = True
     pygame.init()
 
     displaysurface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -29,7 +27,12 @@ def startGame():
     spawner = Spawner()
     inputHandler = InputHandler()
 
-    while True:
+    while isRunning:
+
+        if pygame.event.get(eventtype=pygame.QUIT):
+            isRunning = False
+            pygame.quit()
+            sys.exit()
 
         displaysurface.fill((0, 0, 0))
 
@@ -53,9 +56,12 @@ def startGame():
         pygame.event.pump()
 
 
-threads = []
+if __name__ == "__main__":
 
-thread = threading.Thread(target=startGame, args=())
-thread.start()
+    # having the game in a different thread is why we need to close game and asyncio separately
+    threads = []
 
-asyncio.run(hello())
+    thread = threading.Thread(target=startGame, args=())
+    thread.start()
+
+    asyncio.run(handleClient())
