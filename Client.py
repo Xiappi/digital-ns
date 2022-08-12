@@ -13,14 +13,10 @@ async def handleClient():
         data = await reader.read(50)
         print(f'Received: {data.decode()!r}')
 
-        coords = data.decode()
-        print(f"<<< {coords}")
-
-        x = str(coords).split(",")[0]
-        y = str(coords).split(",")[1]
+        shapeStr = data.decode()
 
         pygame.event.post(pygame.event.Event(
-        EventTypes.CREATE_SHAPE, coords=(x, y)))
+        EventTypes.CREATE_SHAPE, shapes=shapeStr))
 
         # TODO: check for exit input to stop gracefully
     print("client exiting")

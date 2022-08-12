@@ -61,12 +61,15 @@ async def handleSending():
             addr = connection.get_extra_info('peername')
             print(f"saying hi to {addr}")
 
+            shapeStr = ""
+
             events = pygame.event.get(EventTypes.SHAPES)
             for shape in events[0].shapes:
-                connection.write(f"{round(shape.pos.x)},{round(shape.pos.y)}".encode())
+                shapeStr += (f"{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
+                shapeStr += ";"
 
-            #connection.write(f"hi {addr}".encode())
-        await asyncio.sleep(.5)
+            connection.write(f"{shapeStr}".encode())
+        await asyncio.sleep(.03)
 
 
 async def main():

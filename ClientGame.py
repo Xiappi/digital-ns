@@ -42,15 +42,22 @@ def startGame():
         pygame.display.update()
         FramePerSec.tick(FPS)
 
-        #all_sprites.empty()
+        all_sprites.empty()
 
         for event in pygame.event.get(EventTypes.CREATE_SHAPE):
-            print(str(event))
-            shap = Shape()
-            shap.randomize()
-            shap.pos.x = int(event.coords[0])
-            shap.pos.y = int(event.coords[1])
-            all_sprites.add(shap)
+            for shape in str(event.shapes).split(";"):
+                try:
+                    xPos = int(shape.split(",")[0])
+                    yPos = int(shape.split(",")[1])
+                    radi = int(shape.split(",")[2])
+
+                    shap = Shape(xPos, yPos, radi)
+                    shap.move()
+                    all_sprites.add(shap)
+                except:
+                    continue
+
+        #physics.update(all_sprites)
 
         # let pygame handle events we don't process
         pygame.event.pump()

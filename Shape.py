@@ -9,14 +9,19 @@ WHITE = (255, 255, 255)
 
 
 class Shape(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x=-1, y=-1, radius=-1):
         super().__init__()
         
-        self.radius = random.randint(5, 10)
+        if(radius == -1):
+            self.radius = random.randint(5, 10)
+        else:
+            self.radius = radius
+        
         self.height = self.radius * 2
         self.width = self.radius * 2
 
-        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        # self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        self.color = (255, 0, 0)
 
         self.surf = pygame.Surface((self.height, self.width))
         self.surf.fill(self.color) 
@@ -25,7 +30,16 @@ class Shape(pygame.sprite.Sprite):
         self.image.fill(WHITE)    
         self.image.set_colorkey(WHITE)  
 
-        self.pos = vec((200, 200))
+        if (x == -1):
+            xPos = 200
+        else:
+            xPos = x
+        if (y == -1):
+            yPos = 200
+        else:
+            yPos = y
+
+        self.pos = vec((xPos, yPos))
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
@@ -67,11 +81,7 @@ class Shape(pygame.sprite.Sprite):
         self.image = self.surf
 
         # Make sure that when it's redrawn, it's kept in bounds
-        self.rect = pygame.draw.circle(
-            self.image, self.color, (self.width//2, self.height//2), self.radius)
-
-
-
+        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
 
 
         self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
