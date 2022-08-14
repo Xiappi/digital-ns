@@ -1,6 +1,4 @@
-from ast import PyCF_ALLOW_TOP_LEVEL_AWAIT
-from tkinter import OFF
-from turtle import back, window_height
+
 import pygame
 import sys
 import Server
@@ -15,7 +13,6 @@ import Camera
 
 def startGame():
     background = pygame.image.load("Images/background.jpg")
-    border = pygame.Rect(0, 0, ARENA_WIDTH, ARENA_HEIGHT)
     isRunning = True    
     
     pygame.init()

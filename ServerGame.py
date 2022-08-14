@@ -8,16 +8,25 @@ import EventTypes
 from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
-from Shape import Shape
-from Globals import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
+import Shape
+from Globals import *
 from Server import main
+
+import Camera
 
 
 def startGame():
 
+    # INITIALIZATION STUFF
+
+    background = pygame.image.load("Images/background.jpg")
+    isRunning = True    
+
     pygame.init()
 
-    displaysurface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    canvas = pygame.Surface((WINDOW_WIDTH,WINDOW_HEIGHT))
+    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
     pygame.display.set_caption("Server")
     FramePerSec = pygame.time.Clock()
 
@@ -28,18 +37,27 @@ def startGame():
     spawner = Spawner()
     inputHandler = InputHandler()
 
-    while True:
+    camera = Camera.Camera()
+    follow = Camera.Follow(camera)
+    camera.setMethod(follow)
 
-        displaysurface.fill((0, 0, 0))
+    while isRunning:
 
-        for entity in all_sprites:
-            displaysurface.blit(entity.surf, entity.rect)
+        if pygame.event.get(eventtype=pygame.QUIT):
+            isRunning = False
+            pygame.quit()
+            sys.exit()
 
         pygame.display.update()
         FramePerSec.tick(FPS)
 
         newShape = spawner.handle()
 
+        if(newShape):
+            all_sprites.add(newShape)
+
+        # HANDLE EVENTS BEFORE DRAWING
+        newShape = spawner.handle()
         if(newShape):
             all_sprites.add(newShape)
 
@@ -57,16 +75,51 @@ def startGame():
             EventTypes.SHAPES, shapes=all_sprites
         ))
 
+        ### HANDLE CAMERA ###
+        biggestShape = None
+        for shape in all_sprites:
+            if  biggestShape == None or biggestShape.radius < shape.radius:
+                biggestShape = shape
+
+            if camera.object == None or camera.object != biggestShape:
+                camera.setObjectToFollow(biggestShape)
+
+
+        camera.scroll()
+
+        
+        ### HANDLE DRAWING ###
+        canvas.fill((0,0,0))
+        window.fill((0, 0, 0))
+
+        canvas.blit(background, (ARENA_OFFSET - camera.offset.x - ARENA_WIDTH/2, ARENA_OFFSET - camera.offset.y - ARENA_HEIGHT/2)) 
+
+        for entity in all_sprites:
+            canvas.blit(entity.surf, (entity.rect.x - camera.offset.x, entity.rect.y - camera.offset.y))
+
+        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
+        
+
+        FramePerSec.tick(FPS)
+
         # let pygame handle events we don't process
         pygame.event.pump()
+
+        # ALWAYS DRAW CANVAS ON WINDOW LAST, THEN UPDATE
+        window.blit(canvas, (0,0))
+        pygame.display.update()
+
 
 
 
 if __name__ == "__main__":
     
+    startGame()
+    pass
+
     threads = []
 
     thread = threading.Thread(target=startGame, args=())
     thread.start()
 
-    asyncio.run(main())
+    # asyncio.run(Server.startServer())
