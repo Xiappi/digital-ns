@@ -31,16 +31,19 @@
 import asyncio
 import pygame
 import EventTypes
+from Shape import Shape
 
 connections = set()
 backgroundTasks = set()
 
 async def handleServer(reader, writer):
 
-    connections.add(writer)
+    connections.add((reader, writer))
     addr = writer.get_extra_info('peername')
     
     try:
+        data = await reader.read(500)
+        createShape(data)
         await writer.wait_closed()
     except Exception:
         print(f"{addr} ended")
@@ -58,8 +61,9 @@ async def handleSending():
     # TODO: exit on some condition 
     while True:
         for connection in connections:
-            addr = connection.get_extra_info('peername')
-            print(f"saying hi to {addr}")
+            writer = connection[1]
+            addr = writer.get_extra_info('peername')
+            #print(f"saying hi to {addr}")
 
             shapeStr = ""
 
@@ -68,14 +72,19 @@ async def handleSending():
                 shapeStr += (f"{shape.name},{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
                 shapeStr += ";"
 
-            connection.write(f"{shapeStr}".encode())
+            writer.write(f"{shapeStr}".encode())
+
         await asyncio.sleep(.03)
+
+def createShape(data):
+    pygame.event.post(EventTypes.CLIENT_SEND_SHAPE, shape=Shape())
 
 
 async def main():
 
     # initiate data sending and cleanup after it finishes
     sendTask = asyncio.create_task(handleSending())
+    # recvTask = asyncio.create_task(handleReceiving())
     sendTask.add_done_callback(backgroundTasks.discard)
     backgroundTasks.add(sendTask)
 

@@ -1,10 +1,12 @@
 import asyncio
+from selectors import EVENT_WRITE
 import threading
 import pygame
 import sys
 
 import EventTypes
 
+from uuid import UUID
 from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
@@ -27,6 +29,8 @@ def startGame():
     spawner = Spawner()
     inputHandler = InputHandler()
 
+    createdShape = False
+
     while isRunning:
 
         if pygame.event.get(eventtype=pygame.QUIT):
@@ -39,6 +43,13 @@ def startGame():
             pygame.event.pump()
             continue
 
+        # keys = pygame.key.get_pressed()
+        # if keys[pygame.K_SPACE]:
+        #     if(createdShape == False):
+        #         pygame.event.post(pygame.event.event_name(
+        #             EventTypes.CLIENT_SEND_SHAPE, shape=Shape()
+        #         ))
+
         displaysurface.fill((0, 0, 0))
 
         for entity in all_sprites:
@@ -47,16 +58,33 @@ def startGame():
         pygame.display.update()
         FramePerSec.tick(FPS)
 
-        for event in pygame.event.get(EventTypes.CREATE_SHAPE):
+        for event in pygame.event.get(EventTypes.SERVER_SEND_SHAPE):
+
+            # If we got more shapes than we already have
+            # then something most have gotten killed
+            # Wipe the board and start again
+            if len(str(event.shapes).split(";")) - 1 != len(all_sprites):
+                all_sprites.empty()
+
             for shape in str(event.shapes).split(";"):
                 alreadyExists = False
                 
+                # If there isn't enough data for the shape don't draw it
+                if len(shape.split(",")) < 4:
+                    continue
+
                 try:
                     name = str(shape.split(",")[0])
                     xPos = int(shape.split(",")[1])
                     yPos = int(shape.split(",")[2])
                     radi = int(shape.split(",")[3])
                 except:
+                    continue
+
+                try:
+                    UUID(name)
+                except ValueError:
+                    print("Invalid UUID")
                     continue
 
                 # Check all existing shapes to make sure there isn't one already with the same UUID
@@ -67,7 +95,7 @@ def startGame():
                         shape2.pos.x = xPos
                         shape2.pos.y = yPos
                         shape2.radius = radi
-                        shap.move()
+                        shape2.move()
 
                 # If the shape doesn't exist
                 if (alreadyExists == False or len(all_sprites) == 0):

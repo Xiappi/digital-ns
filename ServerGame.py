@@ -64,11 +64,9 @@ def startGame():
         physics.update(all_sprites)
         inputHandler.handle()
 
-        for event in pygame.event.get(EventTypes.GREETING):
+        for event in pygame.event.get(EventTypes.CLIENT_SEND_SHAPE):
             print(str(event))
-            shap = Shape()
-            shap.randomize()
-            all_sprites.add(shap)
+            all_sprites.add(event.shape)
 
         # Now post all of the current shapes
         pygame.event.post(pygame.event.Event(
