@@ -47,11 +47,12 @@ def startGame():
         for event in pygame.event.get(EventTypes.CREATE_SHAPE):
             for shape in str(event.shapes).split(";"):
                 try:
-                    xPos = int(shape.split(",")[0])
-                    yPos = int(shape.split(",")[1])
-                    radi = int(shape.split(",")[2])
+                    name = str(shape.split(",")[0])
+                    xPos = int(shape.split(",")[1])
+                    yPos = int(shape.split(",")[2])
+                    radi = int(shape.split(",")[3])
 
-                    shap = Shape(xPos, yPos, radi)
+                    shap = Shape(name, xPos, yPos, radi)
                     shap.move()
                     all_sprites.add(shap)
                 except:

@@ -65,7 +65,7 @@ async def handleSending():
 
             events = pygame.event.get(EventTypes.SHAPES)
             for shape in events[0].shapes:
-                shapeStr += (f"{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
+                shapeStr += (f"{shape.name},{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
                 shapeStr += ";"
 
             connection.write(f"{shapeStr}".encode())

@@ -1,4 +1,5 @@
 from turtle import shape
+from uuid import uuid4
 import pygame
 import random
 from pygame.math import Vector2 as vec
@@ -9,8 +10,10 @@ WHITE = (255, 255, 255)
 
 
 class Shape(pygame.sprite.Sprite):
-    def __init__(self, x=-1, y=-1, radius=-1):
+    def __init__(self, name=uuid4(), x=-1, y=-1, radius=-1):
         super().__init__()
+
+        self.name = name
         
         if(radius == -1):
             self.radius = random.randint(5, 10)
