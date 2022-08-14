@@ -95,11 +95,11 @@ def startGame():
         canvas.blit(background, (ARENA_OFFSET - camera.offset.x - ARENA_WIDTH/2, ARENA_OFFSET - camera.offset.y - ARENA_HEIGHT/2)) 
 
         for entity in all_sprites:
-            canvas.blit(entity.surf, (entity.rect.x - camera.offset.x, entity.rect.y - camera.offset.y))
+            entity.draw(canvas, camera)
 
+        # draw arena bounds
         pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
         
-
         FramePerSec.tick(FPS)
 
         # let pygame handle events we don't process

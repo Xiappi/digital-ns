@@ -12,27 +12,18 @@ WHITE = (255, 255, 255)
 class Shape(pygame.sprite.Sprite):
     def __init__(self, name=uuid4(), x=-1, y=-1, radius=-1):
         super().__init__()
+        self.color = (255, 0, 0)
 
         self.name = name
-        
+        self.rect = None
+
         if(radius == -1):
             self.radius = random.randint(5, 10)
         else:
             self.radius = radius
         
-        self.height = self.radius * 2
-        self.width = self.radius * 2
-
         # self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        self.color = (255, 0, 0)
-
-        self.surf = pygame.Surface((self.height, self.width))
-        self.surf.fill(self.color) 
-
-        self.image = self.surf
-        self.image.fill(WHITE)    
-        self.image.set_colorkey(WHITE)  
-
+        
         if (x == -1):
             xPos = 200
         else:
@@ -48,7 +39,6 @@ class Shape(pygame.sprite.Sprite):
 
         self.friction = -0.12
 
-        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
 
     def move(self):
 
@@ -68,23 +58,16 @@ class Shape(pygame.sprite.Sprite):
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
-        self.rect.center = self.pos
-
     def randomize(self):
-        self.acc.x = -ACC * random.random()
-        self.acc.y = -ACC * random.random()
+        self.acc.x = -ACC * random.randrange(-1, 1)
+        self.acc.y = -ACC * random.randrange(-1, 1)
 
     def getBound(self):
         return self.radius
 
-    def redraw(self):
-        self.height = self.radius * 2
-        self.width = self.radius * 2
-        self.surf = pygame.Surface((self.height, self.width))
-        self.image = self.surf
-
-        # Make sure that when it's redrawn, it's kept in bounds
-        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)
+    def draw(self, canvas, camera):
+        self.rect = pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
+        
+        
 
 
-        self.rect = pygame.draw.circle(self.image, self.color, (self.width//2, self.height//2), self.radius)

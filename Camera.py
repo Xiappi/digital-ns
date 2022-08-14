@@ -37,8 +37,8 @@ class Follow(CamScroll):
         if self.camera.object == None:
             return
         
-        print(self.camera.offset_float.x)
-        self.camera.offset_float.x += (self.camera.object.rect.x -self.camera.offset_float.x + self.camera.CONST.x)
-        self.camera.offset_float.y += (self.camera.object.rect.y -self.camera.offset_float.y + self.camera.CONST.y)
+        self.camera.offset_float.x += (self.camera.object.pos.x -self.camera.offset_float.x + self.camera.CONST.x)
+        self.camera.offset_float.y += (self.camera.object.pos.y -self.camera.offset_float.y + self.camera.CONST.y)
         self.camera.offset.x, self.camera.offset.y = int(self.camera.offset_float.x), int(self.camera.offset_float.y)
+
 
