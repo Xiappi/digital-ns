@@ -10,10 +10,13 @@ WHITE = (255, 255, 255)
 
 
 class Shape(pygame.sprite.Sprite):
-    def __init__(self, name=uuid4(), x=-1, y=-1, radius=-1):
+    def __init__(self, name=0, x=-1, y=-1, radius=-1):
         super().__init__()
 
-        self.name = name
+        if name == 0:
+            self.name = uuid4()
+        else:
+            self.name = name
         
         if(radius == -1):
             self.radius = random.randint(5, 10)
