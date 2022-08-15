@@ -19,9 +19,9 @@ import Camera
 def startGame(loop):
     # INITIALIZATION STUFF
 
-    background = pygame.image.load("Images/background.jpg")
-
     pygame.init()
+
+    background = pygame.image.load("Images/background.jpg")
 
     canvas = pygame.Surface((Globals.WINDOW_WIDTH,Globals.WINDOW_HEIGHT))
     window = pygame.display.set_mode((Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT))
@@ -64,7 +64,6 @@ def startGame(loop):
         for event in pygame.event.get(EventTypes.CLIENT_SEND_SHAPE):
             print(str(event))
             all_sprites.add(event.shape)
-            loop.stop()
 
         # Now post all of the current shapes
         pygame.event.post(pygame.event.Event(
@@ -83,7 +82,6 @@ def startGame(loop):
 
         camera.scroll()
 
-        
         ### HANDLE DRAWING ###
         canvas.fill((0,0,0))
         window.fill((0, 0, 0))

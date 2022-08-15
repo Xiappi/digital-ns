@@ -41,10 +41,7 @@ async def handleSending():
                 await connection.drain()
                 # shapeStr = ""
 
-                events = pygame.event.get(eventtype=EventTypes.SHAPES)
-                print(f"events: {events}")
-                for event in events:
-                    print(event.shapes)
+
 
 
                 # connection.write(f"{shapeStr}".encode())
