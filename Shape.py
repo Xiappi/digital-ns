@@ -10,15 +10,15 @@ WHITE = (255, 255, 255)
 
 
 class Shape(pygame.sprite.Sprite):
-    def __init__(self, name=0, x=-1, y=-1, radius=-1):
+    def __init__(self, uuid=0, x=-1, y=-1, radius=-1):
         super().__init__()
         self.color = (255, 0, 0)
         self.rect = None
 
-        if name == 0:
-            self.name = uuid4()
+        if uuid == 0:
+            self.uuid = uuid4()
         else:
-            self.name = name
+            self.uuid = uuid
         
         if(radius == -1):
             self.radius = random.randint(5, 10)
@@ -43,7 +43,7 @@ class Shape(pygame.sprite.Sprite):
         self.friction = -0.12
 
     def __str__(self):
-        return f"{self.name},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
+        return f"{self.uuid},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
 
     def move(self):
 
