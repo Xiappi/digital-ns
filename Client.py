@@ -3,6 +3,7 @@ from http import client
 import websockets
 import EventTypes
 import pygame
+import Globals
 
 async def handleClient():
     pygame.init()
@@ -12,7 +13,8 @@ async def handleClient():
 
 
     # read while we server is up
-    while not reader.at_eof():
+    while not reader.at_eof() and Globals.IS_RUNNING:
+            
         data = await reader.read(5000)
         print(f'Received: {data.decode()!r}')
 

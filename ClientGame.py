@@ -1,9 +1,8 @@
+from ast import Global
 import asyncio
-from selectors import EVENT_WRITE
 import threading
 import pygame
 import sys
-from Camera import *
 
 import EventTypes
 
@@ -11,18 +10,24 @@ from uuid import UUID
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 from Shape import Shape
-from Globals import *
+
+import Globals
+
+
 from Client import handleClient
 import Camera
-def startGame():
-    background = pygame.image.load("Images/background.jpg")
-    isRunning = True
+
+def startGame(loop):
+    # INITIALIZATION STUFF
 
     pygame.init()
-    pygame.display.set_caption("Client")
 
-    canvas = pygame.Surface((WINDOW_WIDTH,WINDOW_HEIGHT))
-    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    background = pygame.image.load("Images/background.jpg")
+
+    canvas = pygame.Surface((Globals.WINDOW_WIDTH,Globals.WINDOW_HEIGHT))
+    window = pygame.display.set_mode((Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT))
+
+    pygame.display.set_caption("Client")
 
     FramePerSec = pygame.time.Clock()
 
@@ -39,11 +44,12 @@ def startGame():
 
     createdShape = False
 
-    while isRunning:
+    while Globals.IS_RUNNING:
 
         if pygame.event.get(eventtype=pygame.QUIT):
-            isRunning = False
-            pygame.quit()
+            Globals.IS_RUNNING = False
+            loop.stop()
+            loop.close()
             sys.exit()
 
         if len(pygame.event.get(pygame.WINDOWMOVED)) > 0:
@@ -59,7 +65,7 @@ def startGame():
         #         ))
 
         pygame.display.update()
-        FramePerSec.tick(FPS)
+        FramePerSec.tick(Globals.FPS)
 
         for event in pygame.event.get(EventTypes.SERVER_SEND_SHAPE):
         
@@ -113,7 +119,7 @@ def startGame():
         canvas.fill((0,0,0))
         window.fill((0, 0, 0))
 
-        canvas.blit(background, (ARENA_OFFSET - camera.offset.x - ARENA_WIDTH/2, ARENA_OFFSET - camera.offset.y - ARENA_HEIGHT/2)) 
+        canvas.blit(background, (Globals.ARENA_OFFSET - camera.offset.x - Globals.ARENA_WIDTH/2, Globals.ARENA_OFFSET - camera.offset.y - Globals.ARENA_HEIGHT/2)) 
 
         for entity in all_sprites:
             entity.draw(canvas, camera)
@@ -130,12 +136,12 @@ def startGame():
         window.blit(canvas, (0,0))
         pygame.display.update()
 
+
 if __name__ == "__main__":
+    Globals.init()
 
-    # having the game in a different thread is why we need to close game and asyncio separately
-    threads = []
-
-    thread = threading.Thread(target=startGame, args=())
+    loop = asyncio.new_event_loop()
+    thread = threading.Thread(target=startGame, args=(loop,), daemon=True)
     thread.start()
 
     asyncio.run(handleClient())
