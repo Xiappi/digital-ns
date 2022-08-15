@@ -16,7 +16,11 @@ async def handleClient():
     # read while we server is up
     while not reader.at_eof() and Globals.IS_RUNNING:
             
-        data = await reader.read(100000)
+        try:
+            data = await reader.read(100000)
+        except ConnectionResetError:
+            Globals.IS_RUNNING == False
+            break
         # print(f'Received: {data.decode()!r}')
 
         shapeStr = data.decode()
@@ -34,6 +38,7 @@ async def handleClient():
 
         # TODO: check for exit input to stop gracefully
     print("client exiting")
+    pygame.event.post(pygame.event.Event(pygame.QUIT))
 
 if __name__ == "__main__":
     asyncio.run(handleClient())
