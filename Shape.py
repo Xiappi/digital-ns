@@ -42,6 +42,8 @@ class Shape(pygame.sprite.Sprite):
 
         self.friction = -0.12
 
+    def __str__(self):
+        return f"{self.name},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
 
     def move(self):
 

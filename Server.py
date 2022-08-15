@@ -9,8 +9,8 @@ backgroundTasks = set()
 
 async def handleServer(reader, writer):
 
-    # data = await reader.read(500)
-    # createShape(data)
+    data = await reader.read(500)
+    createShape(data)
 
     connections.add(writer)
     addr = writer.get_extra_info('peername')
@@ -48,7 +48,7 @@ async def handleSending():
                 shapeStr = ""
 
                 for shape in event.shapes:
-                    shapeStr += (f"{shape.name},{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
+                    shapeStr += (f"{str(shape)}")
                     shapeStr += ";" 
 
                 connection.write(f"{shapeStr}".encode())
@@ -63,7 +63,8 @@ async def handleSending():
         await asyncio.sleep(.03)
 
 def createShape(data):
-    pygame.event.post(EventTypes.CLIENT_SEND_SHAPE, shape=Shape())
+    pygame.event.post(pygame.event.Event(
+        EventTypes.CLIENT_SEND_SHAPE, shape=Shape()))
 
 
 async def main():

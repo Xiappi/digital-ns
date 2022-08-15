@@ -49,21 +49,18 @@ def startGame(loop):
         pygame.display.update()
         FramePerSec.tick(Globals.FPS)
 
-        newShape = spawner.handle()
-
-        if(newShape):
-            all_sprites.add(newShape)
-
         # HANDLE EVENTS BEFORE DRAWING
         newShape = spawner.handle()
         if(newShape):
             all_sprites.add(newShape)
 
-        physics.update(all_sprites)
-
         for event in pygame.event.get(EventTypes.CLIENT_SEND_SHAPE):
             print(str(event))
-            all_sprites.add(event.shape)
+            clientShape = event.shape
+            clientShape.randomize()
+            all_sprites.add(clientShape)
+
+        physics.update(all_sprites)
 
         # Now post all of the current shapes
         pygame.event.post(pygame.event.Event(
