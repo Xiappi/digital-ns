@@ -3,6 +3,7 @@ from selectors import EVENT_WRITE
 import threading
 import pygame
 import sys
+from Camera import *
 
 import EventTypes
 
@@ -13,21 +14,29 @@ from Spawner import Spawner
 from Shape import Shape
 from Globals import *
 from Client import handleClient
-
+import Camera
 def startGame():
+    background = pygame.image.load("Images/background.jpg")
     isRunning = True
-    pygame.init()
 
-    displaysurface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.init()
     pygame.display.set_caption("Client")
+
+    canvas = pygame.Surface((WINDOW_WIDTH,WINDOW_HEIGHT))
+    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
     FramePerSec = pygame.time.Clock()
 
     # CREATE SHAPE
     all_sprites = pygame.sprite.Group()
 
-    physics = PhysicsEngine()
-    spawner = Spawner()
-    inputHandler = InputHandler()
+    camera = Camera.Camera()
+    follow = Camera.Follow(camera)
+    camera.setMethod(follow)
+
+    myShape = Shape()
+    myShape.randomize()
+    camera.setObjectToFollow(myShape)
 
     createdShape = False
 
@@ -50,16 +59,11 @@ def startGame():
         #             EventTypes.CLIENT_SEND_SHAPE, shape=Shape()
         #         ))
 
-        displaysurface.fill((0, 0, 0))
-
-        for entity in all_sprites:
-            displaysurface.blit(entity.surf, entity.rect)
-
         pygame.display.update()
         FramePerSec.tick(FPS)
 
         for event in pygame.event.get(EventTypes.SERVER_SEND_SHAPE):
-
+        
             # If we got more shapes than we already have
             # then something most have gotten killed
             # Wipe the board and start again
@@ -103,9 +107,27 @@ def startGame():
                     shap.move()
                     all_sprites.add(shap)
 
+        ### HANDLE DRAWING ###
+        canvas.fill((0,0,0))
+        window.fill((0, 0, 0))
+
+        canvas.blit(background, (ARENA_OFFSET - camera.offset.x - ARENA_WIDTH/2, ARENA_OFFSET - camera.offset.y - ARENA_HEIGHT/2)) 
+
+        for entity in all_sprites:
+            entity.draw(canvas, camera)
+            print(entity.pos)
+
+        # draw arena bounds
+        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
+        
+        camera.scroll()
+
         # let pygame handle events we don't process
         pygame.event.pump()
 
+        # ALWAYS DRAW CANVAS ON WINDOW LAST, THEN UPDATE
+        window.blit(canvas, (0,0))
+        pygame.display.update()
 
 if __name__ == "__main__":
 

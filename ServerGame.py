@@ -10,9 +10,10 @@ from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 import Shape
 from Globals import *
-from Server import main
+import Server 
 
 import Camera
+
 
 
 def startGame():
@@ -112,12 +113,9 @@ def startGame():
 
 if __name__ == "__main__":
     
-    startGame()
-    pass
-
     threads = []
 
     thread = threading.Thread(target=startGame, args=())
     thread.start()
 
-    # asyncio.run(Server.startServer())
+    asyncio.run(Server.main())

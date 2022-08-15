@@ -5,10 +5,10 @@ import EventTypes
 import pygame
 
 async def handleClient():
+    
     reader, writer = await asyncio.open_connection(
-        'localhost', 8888)
+        '127.0.0.1', 8888)
 
-    writer.write("hi".encode())
 
     # read while we server is up
     while not reader.at_eof():
@@ -16,7 +16,7 @@ async def handleClient():
         print(f'Received: {data.decode()!r}')
 
         shapeStr = data.decode()
-
+        print(shapeStr)
         pygame.event.post(pygame.event.Event(
         EventTypes.SERVER_SEND_SHAPE, shapes=shapeStr))
 
@@ -33,4 +33,5 @@ async def handleClient():
     print("client exiting")
 
 if __name__ == "__main__":
+    pygame.init()
     asyncio.run(handleClient())
