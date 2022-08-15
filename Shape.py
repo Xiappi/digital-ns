@@ -62,8 +62,8 @@ class Shape(pygame.sprite.Sprite):
             self.vel.y = -self.vel.y
 
     def randomize(self):
-        self.acc.x = -ACC * random.randrange(-1, 1)
-        self.acc.y = -ACC * random.randrange(-1, 1)
+        self.acc.x = -ACC * random.random()
+        self.acc.y = -ACC * random.random()
 
     def getBound(self):
         return self.radius

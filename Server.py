@@ -32,20 +32,27 @@ async def handleSending():
     # TODO: exit on some condition 
     while Globals.IS_RUNNING:
 
+        events = pygame.event.get(eventtype=EventTypes.SHAPES)
+        try:
+            event = events[0]
+        except IndexError:
+            pass
+
         for connection in connections:
             
             try:
                 addr = connection.get_extra_info('peername')
                 print(f"saying hi to {addr}")
-                connection.write("hi".encode())
-                await connection.drain()
-                # shapeStr = ""
+                # connection.write("hi".encode())
+                # await connection.drain()
+                shapeStr = ""
 
-                events = pygame.event.get(eventtype=EventTypes.SHAPES)
-                print(f"events: {events}")
-                for event in events:
-                    print(event.shapes)
+                for shape in event.shapes:
+                    shapeStr += (f"{shape.name},{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
+                    shapeStr += ";" 
 
+                connection.write(f"{shapeStr}".encode())
+                connection.drain()
 
                 # connection.write(f"{shapeStr}".encode())
             except Exception as e:

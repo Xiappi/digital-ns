@@ -17,9 +17,8 @@ async def handleClient():
         print(f'Received: {data.decode()!r}')
 
         shapeStr = data.decode()
-        print(shapeStr)
-        # pygame.event.post(pygame.event.Event(
-        # EventTypes.SERVER_SEND_SHAPE, shapes=shapeStr))
+        pygame.event.post(pygame.event.Event(
+        EventTypes.SERVER_SEND_SHAPE, shapes=shapeStr))
 
         # clientShapeEvents = pygame.event.get(EventTypes.CLIENT_SEND_SHAPE)
         # # If there is a shape to send back

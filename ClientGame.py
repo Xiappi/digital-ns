@@ -105,6 +105,9 @@ def startGame():
                     shap = Shape(name, xPos, yPos, radi)
                     shap.move()
                     all_sprites.add(shap)
+                    camera.setObjectToFollow(shap)
+
+        camera.scroll()
 
         ### HANDLE DRAWING ###
         canvas.fill((0,0,0))
@@ -114,12 +117,11 @@ def startGame():
 
         for entity in all_sprites:
             entity.draw(canvas, camera)
-            print(entity.pos)
 
         # draw arena bounds
         pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
-        
-        camera.scroll()
+    
+        FramePerSec.tick(Globals.FPS)
 
         # let pygame handle events we don't process
         pygame.event.pump()
