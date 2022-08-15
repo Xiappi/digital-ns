@@ -10,8 +10,11 @@ WHITE = (255, 255, 255)
 
 
 class Shape(pygame.sprite.Sprite):
-    def __init__(self, uuid=0, x=-1, y=-1, radius=-1):
+    def __init__(self, name="Default Name", uuid=0, x=-1, y=-1, radius=-1):
         super().__init__()
+
+        self.name = name
+
         self.color = (255, 0, 0)
         self.rect = None
 
@@ -42,6 +45,12 @@ class Shape(pygame.sprite.Sprite):
 
         self.friction = -0.12
 
+
+        self.font = pygame.font.Font('freesansbold.ttf', 24)
+        self.text = self.font.render(self.name, True, (255, 255, 255), None)
+        self.textRect = self.text.get_rect()
+        
+
     def __str__(self):
         return f"{self.uuid},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
 
@@ -63,6 +72,8 @@ class Shape(pygame.sprite.Sprite):
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
+        
+
     def randomize(self):
         self.acc.x = -ACC * random.random()
         self.acc.y = -ACC * random.random()
@@ -72,6 +83,8 @@ class Shape(pygame.sprite.Sprite):
 
     def draw(self, canvas, camera):
         self.rect = pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
+        self.textRect.center = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y + 25 + self.radius)
+        canvas.blit(self.text, self.textRect)
         
         
 
