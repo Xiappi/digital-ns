@@ -1,4 +1,3 @@
-from ast import Global
 import asyncio
 import threading
 import pygame
@@ -125,7 +124,7 @@ def startGame(loop):
             entity.draw(canvas, camera)
 
         # draw arena bounds
-        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
+        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(Globals.ARENA_OFFSET - camera.offset.x, Globals.ARENA_OFFSET - camera.offset.y , Globals.ARENA_WIDTH - Globals.ARENA_OFFSET, Globals.ARENA_HEIGHT - Globals.ARENA_OFFSET),  2)
     
         FramePerSec.tick(Globals.FPS)
 

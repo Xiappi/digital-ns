@@ -16,7 +16,7 @@ async def handleClient():
     while not reader.at_eof() and Globals.IS_RUNNING:
             
         data = await reader.read(5000)
-        print(f'Received: {data.decode()!r}')
+        # print(f'Received: {data.decode()!r}')
 
         shapeStr = data.decode()
         pygame.event.post(pygame.event.Event(
