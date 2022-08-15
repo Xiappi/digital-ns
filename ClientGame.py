@@ -8,7 +8,6 @@ from Camera import *
 import EventTypes
 
 from uuid import UUID
-from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 from Shape import Shape

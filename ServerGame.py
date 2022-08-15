@@ -1,3 +1,4 @@
+from ast import arg
 import asyncio
 import threading
 import pygame
@@ -5,28 +6,25 @@ import sys
 
 import EventTypes
 
-from InputHandler import InputHandler
 from PhysicsEngine import PhysicsEngine
 from Spawner import Spawner
 import Shape
-from Globals import *
+import Globals
 import Server 
 
 import Camera
 
 
 
-def startGame():
-
+def startGame(loop):
     # INITIALIZATION STUFF
 
     background = pygame.image.load("Images/background.jpg")
-    isRunning = True    
 
     pygame.init()
 
-    canvas = pygame.Surface((WINDOW_WIDTH,WINDOW_HEIGHT))
-    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    canvas = pygame.Surface((Globals.WINDOW_WIDTH,Globals.WINDOW_HEIGHT))
+    window = pygame.display.set_mode((Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT))
 
     pygame.display.set_caption("Server")
     FramePerSec = pygame.time.Clock()
@@ -36,21 +34,20 @@ def startGame():
 
     physics = PhysicsEngine()
     spawner = Spawner()
-    inputHandler = InputHandler()
 
     camera = Camera.Camera()
     follow = Camera.Follow(camera)
     camera.setMethod(follow)
 
-    while isRunning:
-
+    while Globals.IS_RUNNING:
         if pygame.event.get(eventtype=pygame.QUIT):
-            isRunning = False
-            pygame.quit()
+            Globals.IS_RUNNING = False
+            loop.stop()
+            loop.close()
             sys.exit()
 
         pygame.display.update()
-        FramePerSec.tick(FPS)
+        FramePerSec.tick(Globals.FPS)
 
         newShape = spawner.handle()
 
@@ -63,11 +60,11 @@ def startGame():
             all_sprites.add(newShape)
 
         physics.update(all_sprites)
-        inputHandler.handle()
 
         for event in pygame.event.get(EventTypes.CLIENT_SEND_SHAPE):
             print(str(event))
             all_sprites.add(event.shape)
+            loop.stop()
 
         # Now post all of the current shapes
         pygame.event.post(pygame.event.Event(
@@ -91,15 +88,15 @@ def startGame():
         canvas.fill((0,0,0))
         window.fill((0, 0, 0))
 
-        canvas.blit(background, (ARENA_OFFSET - camera.offset.x - ARENA_WIDTH/2, ARENA_OFFSET - camera.offset.y - ARENA_HEIGHT/2)) 
+        canvas.blit(background, (Globals.ARENA_OFFSET - camera.offset.x - Globals.ARENA_WIDTH/2, Globals.ARENA_OFFSET - camera.offset.y - Globals.ARENA_HEIGHT/2)) 
 
         for entity in all_sprites:
             entity.draw(canvas, camera)
 
         # draw arena bounds
-        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(ARENA_OFFSET - camera.offset.x, ARENA_OFFSET - camera.offset.y , ARENA_WIDTH - ARENA_OFFSET, ARENA_HEIGHT - ARENA_OFFSET),  2)
+        pygame.draw.rect(canvas, (255,0,0), pygame.Rect(Globals.ARENA_OFFSET - camera.offset.x, Globals.ARENA_OFFSET - camera.offset.y , Globals.ARENA_WIDTH - Globals.ARENA_OFFSET, Globals.ARENA_HEIGHT - Globals.ARENA_OFFSET),  2)
         
-        FramePerSec.tick(FPS)
+        FramePerSec.tick(Globals.FPS)
 
         # let pygame handle events we don't process
         pygame.event.pump()
@@ -109,13 +106,27 @@ def startGame():
         pygame.display.update()
 
 
+thread = None
 
+
+async def main():
+    
+    loop = asyncio.get_running_loop()
+    await loop.create_task(Server.main())
+
+
+async def TryMe():
+    while True:
+        if Globals.IS_RUNNING:
+            await asyncio.sleep(0.5)
+            continue
 
 if __name__ == "__main__":
-    
-    threads = []
+    Globals.init()
 
-    thread = threading.Thread(target=startGame, args=())
+    loop = asyncio.new_event_loop()
+    thread = threading.Thread(target=startGame, args=(loop,), daemon=True)
     thread.start()
 
-    asyncio.run(Server.main())
+    asyncio.run(main())
+

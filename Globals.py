@@ -9,3 +9,7 @@ ARENA_HEIGHT = 750
 ARENA_OFFSET = 0
 
 FPS = 60
+
+def init():
+    global IS_RUNNING
+    IS_RUNNING= True

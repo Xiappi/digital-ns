@@ -1,37 +1,8 @@
-# import asyncio
-# import pygame
-# import websockets
-# import EventTypes
-
-# async def server(websocket):
-
-#     print("hi")
-#     websocket.send("poeops")
-#     pygame.event.post(pygame.event.Event(
-#         EventTypes.GREETING, message=greeting))
-
-    # events = pygame.event.get(EventTypes.SHAPES)
-    # print("events: " + str(events))
-    # for event in events:
-    #     for shape in event.shapes:
-    #         await websocket.send(f"{shape.pos.x},{shape.pos.y}")
-
-
-# async def startServer():
-#     sev = await asyncio.start_server(server, 'localhost', 15555)
-#     async with sev:
-#         await sev.serve_forever()
-
-#     # async with websockets.serve(server, "localhost", 8765):
-#     #     await stop  # run forever
-
-# if __name__ == "__main__":
-#     asyncio.run(startServer())
-
 import asyncio
 import pygame
 import EventTypes
 from Shape import Shape
+import Globals
 
 connections = set()
 backgroundTasks = set()
@@ -43,7 +14,6 @@ async def handleServer(reader, writer):
 
     connections.add(writer)
     addr = writer.get_extra_info('peername')
-    
     try:
         await writer.wait_closed()
     except Exception:
@@ -58,22 +28,30 @@ async def handleServer(reader, writer):
         connections.remove(writer)
 
 async def handleSending():
-
+    pygame.init()
     # TODO: exit on some condition 
-    while True:
+    while Globals.IS_RUNNING:
+
         for connection in connections:
-            addr = connection.get_extra_info('peername')
-            #print(f"saying hi to {addr}")
+            
+            try:
+                addr = connection.get_extra_info('peername')
+                print(f"saying hi to {addr}")
+                connection.write("hi".encode())
+                await connection.drain()
+                # shapeStr = ""
 
-            shapeStr = ""
+                events = pygame.event.get(eventtype=EventTypes.SHAPES)
+                print(f"events: {events}")
+                for event in events:
+                    print(event.shapes)
 
-            events = pygame.event.get(EventTypes.SHAPES)
-            for shape in events[0].shapes:
-                shapeStr += (f"{shape.name},{round(shape.pos.x)},{round(shape.pos.y)},{shape.radius}")
-                shapeStr += ";"
 
-            print("hi")
-            connection.write(f"{shapeStr}".encode())
+                # connection.write(f"{shapeStr}".encode())
+            except Exception as e:
+                print(f"error with {connection.get_extra_info('peername')}")
+                print(e)
+
 
         await asyncio.sleep(.03)
 
@@ -86,6 +64,7 @@ async def main():
     # initiate data sending and cleanup after it finishes
     sendTask = asyncio.create_task(handleSending())
     sendTask.add_done_callback(backgroundTasks.discard)
+    
     backgroundTasks.add(sendTask)
 
     # start server
@@ -94,9 +73,10 @@ async def main():
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
 
-    # server forever TODO: should probably finish when SIGFAULT is encountered
     async with server:
-        await server.serve_forever()
-
+        await server.start_serving()
+        while Globals.IS_RUNNING:
+            await asyncio.sleep(0.5)
+                
 if __name__ == "__main__":
     asyncio.run(main())
