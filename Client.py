@@ -8,8 +8,14 @@ import Globals
 async def handleClient():
     pygame.init()
     
-    reader, writer = await asyncio.open_connection(
-        '127.0.0.1', 8888)
+    try:
+        reader, writer = await asyncio.open_connection(
+            '127.0.0.1', 8888)
+    except ConnectionRefusedError:
+        print("Server is not open")
+        print("Closing Client...")
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
+        return
 
     writer.write("hi".encode())
 
