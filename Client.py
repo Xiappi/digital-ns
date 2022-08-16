@@ -45,22 +45,12 @@ async def handleClient():
     while not reader.at_eof() and Globals.IS_RUNNING:
         try:
             data = await reader.read(100000)
-        except ConnectionResetError:
+            shapes = pickle.loads(data)
+            pygame.event.post(pygame.event.Event(
+            EventTypes.SERVER_SEND_SHAPE, shapes=shapes))
+        except:
             Globals.IS_RUNNING == False
             break
-
-        shapes = pickle.loads(data)
-        pygame.event.post(pygame.event.Event(
-        EventTypes.SERVER_SEND_SHAPE, shapes=shapes))
-
-        clientShapeEvents = pygame.event.get(EventTypes.CLIENT_SEND_SHAPE)
-        # If there is a shape to send back
-        try:
-            shape = clientShapeEvents[0].shape
-            sendShapeStr = (f"{str(shape)}")
-            writer.write(f"{sendShapeStr}".encode())
-        except:
-            continue
 
         # TODO: check for exit input to stop gracefully
     print("client exiting")
