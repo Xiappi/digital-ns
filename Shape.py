@@ -1,5 +1,5 @@
-from turtle import shape
 from uuid import uuid4
+
 import pygame
 import random
 from pygame.math import Vector2 as vec
@@ -8,8 +8,11 @@ from Globals import *
 ACC = 5
 WHITE = (255, 255, 255)
 
-
 class Shape(pygame.sprite.Sprite):
+
+    def drawMe(self, canvas, camera):
+        return pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
+
     def __init__(self, name="Default Name", uuid=0, x=-1, y=-1, radius=-1):
         super().__init__()
 
@@ -44,13 +47,9 @@ class Shape(pygame.sprite.Sprite):
         self.acc = vec(0, 0)
 
         self.friction = -0.12
-
-
-        self.font = pygame.font.Font('freesansbold.ttf', 24)
-        self.text = self.font.render(self.name, True, (255, 255, 255), None)
-        self.textRect = self.text.get_rect()
         
-
+        self.drawLambda = self.drawMe
+        
     def __str__(self):
         return f"{self.uuid},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
 
@@ -81,11 +80,9 @@ class Shape(pygame.sprite.Sprite):
     def getBound(self):
         return self.radius
 
+
     def draw(self, canvas, camera):
-        self.rect = pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
-        self.textRect.center = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y + 25 + self.radius)
-        canvas.blit(self.text, self.textRect)
-        
-        
+        self.rect = self.drawMe(canvas, camera)
 
-
+        
+    

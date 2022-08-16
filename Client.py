@@ -1,9 +1,14 @@
 import asyncio
+from ctypes import sizeof
 from http import client
-import websockets
+import pickle
 import EventTypes
 import pygame
 import Globals
+from YourShape import YourShape
+
+
+
 
 async def handleClient():
     pygame.init()
@@ -11,21 +16,36 @@ async def handleClient():
     reader, writer = await asyncio.open_connection(
         '127.0.0.1', 8888)
 
-    writer.write("hi".encode())
+    print("checke vent")
+
+    
+    attempts = 0
+
+    while attempts < 3:
+        # GET YOUR SHAPE AND SEND TO SERVRE
+        clientShapeEvent = pygame.event.get(EventTypes.CLIENT_CREATE_SHAPE)
+        print(clientShapeEvent)
+        if len(clientShapeEvent) > 0:
+
+            data = pickle.dumps(clientShapeEvent[0].shape)
+            writer.write(data)
+            await writer.drain()
+            break
+        
+        attempts+=1
+        await asyncio.sleep(0.5)
 
     # read while we server is up
     while not reader.at_eof() and Globals.IS_RUNNING:
-            
         try:
             data = await reader.read(100000)
         except ConnectionResetError:
             Globals.IS_RUNNING == False
             break
-        # print(f'Received: {data.decode()!r}')
 
-        shapeStr = data.decode()
+        shapes = pickle.loads(data)
         pygame.event.post(pygame.event.Event(
-        EventTypes.SERVER_SEND_SHAPE, shapes=shapeStr))
+        EventTypes.SERVER_SEND_SHAPE, shapes=shapes))
 
         clientShapeEvents = pygame.event.get(EventTypes.CLIENT_SEND_SHAPE)
         # If there is a shape to send back
@@ -41,4 +61,5 @@ async def handleClient():
     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
 if __name__ == "__main__":
+    Globals.init()
     asyncio.run(handleClient())

@@ -29,6 +29,8 @@ def startGame(loop):
     pygame.display.set_caption("Server")
     FramePerSec = pygame.time.Clock()
 
+    font = pygame.font.Font('freesansbold.ttf', 24)
+
     # CREATE SHAPE
     all_sprites = pygame.sprite.Group()
 
@@ -87,6 +89,11 @@ def startGame(loop):
 
         for entity in all_sprites:
             entity.draw(canvas, camera)
+
+            text = font.render(entity.name, True, (255, 255, 255), None)
+            textRect = text.get_rect()
+            textRect.center = (entity.pos.x - camera.offset.x, entity.pos.y - camera.offset.y + 25 + entity.radius)
+            canvas.blit(text, textRect)
 
         # draw arena bounds
         pygame.draw.rect(canvas, (255,0,0), pygame.Rect(Globals.ARENA_OFFSET - camera.offset.x, Globals.ARENA_OFFSET - camera.offset.y , Globals.ARENA_WIDTH - Globals.ARENA_OFFSET, Globals.ARENA_HEIGHT - Globals.ARENA_OFFSET),  2)

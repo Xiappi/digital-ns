@@ -1,4 +1,5 @@
 import asyncio
+import pickle
 import pygame
 import EventTypes
 from Shape import Shape
@@ -9,11 +10,16 @@ backgroundTasks = set()
 
 async def handleServer(reader, writer):
 
-    data = await reader.read(500)
-    createShape(data)
+    addr = writer.get_extra_info('peername')
+
+    try:
+        data = await reader.read(10000)
+        createShape(data)
+    except Exception as e:
+        print(f"Failed to get shape from {addr}")
 
     connections.add(writer)
-    addr = writer.get_extra_info('peername')
+
     try:
         await writer.wait_closed()
     except Exception:
@@ -31,40 +37,31 @@ async def handleSending():
     pygame.init()
     # TODO: exit on some condition 
     while Globals.IS_RUNNING:
+        await asyncio.sleep(.03)
 
         events = pygame.event.get(eventtype=EventTypes.SHAPES)
-        try:
-            event = events[0]
-        except IndexError:
-            pass
+
+        if len(events) == 0:
+            continue
+        
+        event = events[0]
 
         for connection in connections:
             
             try:
-                addr = connection.get_extra_info('peername')
-                print(f"saying hi to {addr}")
-                # connection.write("hi".encode())
-                # await connection.drain()
-                shapeStr = ""
+                shapeList = pickle.dumps(event.shapes)
+                connection.write(shapeList)
+                await connection.drain()
 
-                for shape in event.shapes:
-                    shapeStr += (f"{str(shape)}")
-                    shapeStr += ";" 
-
-                connection.write(f"{shapeStr}".encode())
-                connection.drain()
-
-                # connection.write(f"{shapeStr}".encode())
             except Exception as e:
                 print(f"error with {connection.get_extra_info('peername')}")
                 print(e)
 
 
-        await asyncio.sleep(.03)
-
 def createShape(data):
+    receivedShape = pickle.loads(data)
     pygame.event.post(pygame.event.Event(
-        EventTypes.CLIENT_SEND_SHAPE, shape=Shape()))
+        EventTypes.CLIENT_SEND_SHAPE, shape=receivedShape))
 
 
 async def main():
@@ -87,4 +84,5 @@ async def main():
             await asyncio.sleep(0.5)
                 
 if __name__ == "__main__":
+    Globals.init()
     asyncio.run(main())

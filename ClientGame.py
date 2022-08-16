@@ -2,19 +2,20 @@ import asyncio
 import threading
 import pygame
 import sys
-
 import EventTypes
-
 from uuid import UUID
-from PhysicsEngine import PhysicsEngine
-from Spawner import Spawner
 from Shape import Shape
-
 import Globals
-
-
 from Client import handleClient
 import Camera
+from YourShape import YourShape
+
+def createShape():
+    yourShape = YourShape()
+    yourShape.pos.x = 69 
+    yourShape.color = (255,255,255)
+    yourShape.name = "Adam"
+    return yourShape
 
 def startGame(loop):
     # INITIALIZATION STUFF
@@ -30,20 +31,24 @@ def startGame(loop):
 
     FramePerSec = pygame.time.Clock()
 
-    # CREATE SHAPE
+    font = pygame.font.Font('freesansbold.ttf', 24)
+
+    # CREATE SHAPE GROUP
     all_sprites = pygame.sprite.Group()
 
     camera = Camera.Camera()
     follow = Camera.Follow(camera)
     camera.setMethod(follow)
 
-    myShape = Shape()
-    myShape.randomize()
-    camera.setObjectToFollow(myShape)
-
-    createdShape = False
-
+    # CREATE CLIENT SHAPE AND SEND AS EVENT, SO WE KNOW WHICH ONE WE CREATED ORIGINALLY
+    clientShape = createShape()
+    print("create vent")
+    pygame.event.post(pygame.event.Event(
+        EventTypes.CLIENT_CREATE_SHAPE, shape=clientShape
+    ))
+    
     while Globals.IS_RUNNING:
+
 
         if pygame.event.get(eventtype=pygame.QUIT):
             Globals.IS_RUNNING = False
@@ -56,61 +61,21 @@ def startGame(loop):
             pygame.event.pump()
             continue
 
-        # keys = pygame.key.get_pressed()
-        # if keys[pygame.K_SPACE]:
-        #     if(createdShape == False):
-        #         pygame.event.post(pygame.event.event_name(
-        #             EventTypes.CLIENT_SEND_SHAPE, shape=Shape()
-        #         ))
-
         pygame.display.update()
         FramePerSec.tick(Globals.FPS)
 
-        for event in pygame.event.get(EventTypes.SERVER_SEND_SHAPE):
-        
-            # If we got more shapes than we already have
-            # then something most have gotten killed
-            # Wipe the board and start again
-            if len(str(event.shapes).split(";")) - 1 != len(all_sprites):
-                all_sprites.empty()
+        events = pygame.event.get(EventTypes.SERVER_SEND_SHAPE)
 
-            for shape in str(event.shapes).split(";"):
-                alreadyExists = False
-                
-                # If there isn't enough data for the shape don't draw it
-                if len(shape.split(",")) < 4:
-                    continue
+        # no events mean nothing to draw
+        if len(events) > 0:
+            shapes = events[0].shapes
 
-                try:
-                    name = str(shape.split(",")[0])
-                    xPos = int(shape.split(",")[1])
-                    yPos = int(shape.split(",")[2])
-                    radi = int(shape.split(",")[3])
-                except:
-                    continue
-
-                try:
-                    UUID(name)
-                except ValueError:
-                    print("Invalid UUID")
-                    continue
-
-                # Check all existing shapes to make sure there isn't one already with the same UUID
-                for shape2 in all_sprites:
-                    # If the shape already exists
-                    if shape2.name == name:
-                        alreadyExists = True
-                        shape2.pos.x = xPos
-                        shape2.pos.y = yPos
-                        shape2.radius = radi
-                        shape2.move()
-
-                # If the shape doesn't exist
-                if (alreadyExists == False or len(all_sprites) == 0):
-                    shap = Shape(name, xPos, yPos, radi)
-                    shap.move()
-                    all_sprites.add(shap)
-                    camera.setObjectToFollow(shap)
+            # clear out existing shapes before we add new ones
+            all_sprites.empty()
+            for shape in shapes:
+                all_sprites.add(shape)
+                if shape.uuid == clientShape.uuid:
+                    camera.setObjectToFollow(shape)
 
         camera.scroll()
 
@@ -122,6 +87,11 @@ def startGame(loop):
 
         for entity in all_sprites:
             entity.draw(canvas, camera)
+
+            text = font.render(entity.name, True, (255, 255, 255), None)
+            textRect = text.get_rect()
+            textRect.center = (entity.pos.x - camera.offset.x, entity.pos.y - camera.offset.y + 25 + entity.radius)
+            canvas.blit(text, textRect)
 
         # draw arena bounds
         pygame.draw.rect(canvas, (255,0,0), pygame.Rect(Globals.ARENA_OFFSET - camera.offset.x, Globals.ARENA_OFFSET - camera.offset.y , Globals.ARENA_WIDTH - Globals.ARENA_OFFSET, Globals.ARENA_HEIGHT - Globals.ARENA_OFFSET),  2)
@@ -138,7 +108,6 @@ def startGame(loop):
 
 if __name__ == "__main__":
     Globals.init()
-
     loop = asyncio.new_event_loop()
     thread = threading.Thread(target=startGame, args=(loop,), daemon=True)
     thread.start()
