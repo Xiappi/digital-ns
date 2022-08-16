@@ -15,7 +15,7 @@ async def handleClient():
     
     try:
         reader, writer = await asyncio.open_connection(
-            '127.0.0.1', 8888)
+            Globals.IP, 8888)
     except ConnectionRefusedError:
         print("Server is not open")
         print("Closing Client...")

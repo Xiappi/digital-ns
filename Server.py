@@ -46,9 +46,10 @@ async def handleSending():
         
         event = events[0]
 
-        for connection in connections:
+        for i in range(len(connections) -1):
             
             try:
+                connection = connections[i]
                 shapeList = pickle.dumps(event.shapes)
                 connection.write(shapeList)
                 await connection.drain()
@@ -74,7 +75,7 @@ async def main():
 
     # start server
     server = await asyncio.start_server(
-        handleServer, '127.0.0.1', 8888)
+        handleServer, Globals.IP, 8888)
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
 
