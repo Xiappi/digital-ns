@@ -1,4 +1,5 @@
 import asyncio
+from pydoc import cli
 import threading
 import pygame
 import sys
@@ -12,9 +13,6 @@ from YourShape import YourShape
 
 def createShape():
     yourShape = YourShape()
-    yourShape.pos.x = 69 
-    yourShape.color = (255,255,255)
-    yourShape.name = "Adam"
     return yourShape
 
 def startGame(loop):
@@ -60,7 +58,7 @@ def startGame(loop):
             all_sprites.empty()
             pygame.event.pump()
             continue
-
+        
         pygame.display.update()
         FramePerSec.tick(Globals.FPS)
 
@@ -75,6 +73,7 @@ def startGame(loop):
             for shape in shapes:
                 all_sprites.add(shape)
                 if shape.uuid == clientShape.uuid:
+                    clientShapeExists = True
                     camera.setObjectToFollow(shape)
 
         camera.scroll()

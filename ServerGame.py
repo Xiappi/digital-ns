@@ -53,6 +53,12 @@ def startGame(loop):
                 for shape in all_sprites:
                     shape.kill()
 
+        deleteEvents = pygame.event.get(EventTypes.SERVER_DELETE_SHAPE)
+        for event in deleteEvents:
+            for shape in all_sprites:
+                if shape.uuid == event.shapeId:
+                    shape.kill()
+
         pygame.display.update()
         FramePerSec.tick(Globals.FPS)
 

@@ -1,4 +1,5 @@
 import asyncio
+from audioop import add
 import pickle
 import pygame
 import EventTypes
@@ -8,6 +9,8 @@ import Globals
 connections = set()
 backgroundTasks = set()
 
+shapeClientDict = dict()
+
 async def handleServer(reader, writer):
 
     addr = writer.get_extra_info('peername')
@@ -15,6 +18,9 @@ async def handleServer(reader, writer):
     try:
         data = await reader.read(10000)
         createShape(data)
+
+        receivedShape = pickle.loads(data)
+        shapeClientDict[addr] = receivedShape.uuid
     except Exception as e:
         print(f"Failed to get shape from {addr}")
 
@@ -32,6 +38,10 @@ async def handleServer(reader, writer):
 
         print(f"Removing {addr} from connections")
         connections.remove(writer)
+
+        closedShapeID = shapeClientDict.get(addr)
+        pygame.event.post(pygame.event.Event(
+        EventTypes.SERVER_DELETE_SHAPE, shapeId=closedShapeID))
 
 async def handleSending():
     pygame.init()

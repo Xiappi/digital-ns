@@ -1,4 +1,5 @@
 from Shape import Shape
+from pygame.math import Vector2 as vec
 import pygame
 
 class YourShape(Shape):
@@ -10,3 +11,12 @@ class YourShape(Shape):
         super().__init__()
         self.drawLambda =  self.drawMe
 
+        self.name = "Zac"
+
+        self.color = (0, 0, 0)
+
+        self.acc = vec(5, 5)
+
+        self.radius = 5
+
+        self.pos = vec((0, 0))
