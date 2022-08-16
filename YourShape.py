@@ -11,12 +11,18 @@ class YourShape(Shape):
         super().__init__()
         self.drawLambda =  self.drawMe
 
+        # The Name of your shape
         self.name = "Zac"
 
+        # The color of your shape
+        # (Red, Blue, Green)
         self.color = (0, 0, 0)
 
+        # How fast your shape is
         self.acc = vec(5, 5)
 
+        # How big yuour shape is
         self.radius = 5
 
+        # Where your shape in the game
         self.pos = vec((0, 0))
