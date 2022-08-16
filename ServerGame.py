@@ -48,6 +48,11 @@ def startGame(loop):
             loop.close()
             sys.exit()
 
+        for event in pygame.event.get(eventtype=pygame.KEYDOWN):
+            if event.key == pygame.K_r:
+                for shape in all_sprites:
+                    shape.kill()
+
         pygame.display.update()
         FramePerSec.tick(Globals.FPS)
 
