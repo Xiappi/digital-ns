@@ -3,6 +3,7 @@ import asyncio
 import threading
 import pygame
 import sys
+import random
 
 import EventTypes
 
@@ -40,6 +41,12 @@ def startGame(loop):
     camera = Camera.Camera()
     follow = Camera.Follow(camera)
     camera.setMethod(follow)
+
+    for i in range(Globals.STARTING_SHAPES):
+        xPos = random.randint(5, Globals.ARENA_WIDTH - 5)
+        yPos = random.randint(5, Globals.ARENA_HEIGHT - 5)
+        shape = Shape.Shape(name="", x=xPos, y=yPos, radius=3)
+        all_sprites.add(shape)
 
     while Globals.IS_RUNNING:
         if pygame.event.get(eventtype=pygame.QUIT):

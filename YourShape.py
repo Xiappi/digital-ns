@@ -24,7 +24,7 @@ class YourShape(Shape):
         self.radius = 50
 
         # Where your shape in the game
-        self.pos = vec((0, 0))
+        self.pos = vec((200, 200))
 
         # Your type of shape
-        self.shapeType = ShapeTypes.TRIANGLE
+        self.shapeType = ShapeTypes.CIRCLE
