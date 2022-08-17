@@ -61,6 +61,8 @@ def startGame(loop):
                 for shape in all_sprites:
                     shape.kill()
                 smallPoints(all_sprites)
+            if event.key == pygame.K_b:
+                smallPoints(all_sprites)
 
         deleteEvents = pygame.event.get(EventTypes.SERVER_DELETE_SHAPE)
         for event in deleteEvents:
@@ -77,7 +79,7 @@ def startGame(loop):
             all_sprites.add(newShape)
 
         for event in pygame.event.get(EventTypes.CLIENT_SEND_SHAPE):
-            print(str(event))
+            # print(str(event))
             clientShape = event.shape
             all_sprites.add(clientShape)
 

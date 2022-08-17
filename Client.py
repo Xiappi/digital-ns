@@ -21,7 +21,7 @@ async def handleClient():
     while attempts < 3:
         # GET YOUR SHAPE AND SEND TO SERVRE
         clientShapeEvent = pygame.event.get(EventTypes.CLIENT_CREATE_SHAPE)
-        print(clientShapeEvent)
+        # print(clientShapeEvent)
         if len(clientShapeEvent) > 0:
 
             data = pickle.dumps(clientShapeEvent[0].shape)
@@ -40,7 +40,7 @@ async def handleClient():
             pygame.event.post(pygame.event.Event(
             EventTypes.SERVER_SEND_SHAPE, shapes=shapes))
         except (pickle.UnpicklingError, KeyError, ValueError):
-            print("Error unpickling")
+            # print("Error unpickling")
             continue            
         except:
             Globals.IS_RUNNING == False
