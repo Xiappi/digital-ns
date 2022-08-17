@@ -12,7 +12,7 @@ ARENA_OFFSET = 200
 
 FPS = 60
 
-IP="10.10.53.124"
+IP="10.10.11.190"
 
 def init():
     global IS_RUNNING
