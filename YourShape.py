@@ -8,7 +8,7 @@ class YourShape(Shape):
         super().__init__()
 
         # # The Name of your shape
-        # self.name = "Adam"
+        self.name = "Zac"
 
         # # The color of your shape
         # # (Red, Blue, Green)
@@ -24,4 +24,4 @@ class YourShape(Shape):
         # self.pos = vec((200, 200))
 
         # Your type of shape
-        # self.shapeType = ShapeTypes.SQUARE
+        self.shapeType = ShapeTypes.Circle
