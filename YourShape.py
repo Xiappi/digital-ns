@@ -21,7 +21,7 @@ class YourShape(Shape):
         self.acc = vec(5, 5)
 
         # How big yuour shape is
-        self.radius = 50
+        self.radius = 500
 
         # Where your shape in the game
         self.pos = vec((200, 200))

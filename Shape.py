@@ -69,6 +69,16 @@ class Shape(pygame.sprite.Sprite):
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
+        while (self.pos.x + self.getBound() >= ARENA_WIDTH):
+            self.pos.x -= 1
+        while (self.pos.x - self.getBound() <= ARENA_OFFSET):
+            self.pos.x += 1
+
+        while (self.pos.y + self.getBound() >= ARENA_HEIGHT):
+            self.pos.y -= 1
+        while (self.pos.y - self.getBound() <= ARENA_OFFSET):
+            self.pos.y += 1
+
         
 
     def randomize(self):
