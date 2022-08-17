@@ -40,6 +40,7 @@ def startGame(loop):
 
     # CREATE CLIENT SHAPE AND SEND AS EVENT, SO WE KNOW WHICH ONE WE CREATED ORIGINALLY
     clientShape = createShape()
+    camera.setObjectToFollow(clientShape)
     print("create vent")
     pygame.event.post(pygame.event.Event(
         EventTypes.CLIENT_CREATE_SHAPE, shape=clientShape
@@ -73,7 +74,6 @@ def startGame(loop):
             for shape in shapes:
                 all_sprites.add(shape)
                 if shape.uuid == clientShape.uuid:
-                    clientShapeExists = True
                     camera.setObjectToFollow(shape)
 
         camera.scroll()
