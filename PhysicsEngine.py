@@ -13,7 +13,7 @@ class PhysicsEngine():
                     continue
                 
                 # When we start doing more shapes we're gonna want to use a mask to that this is universal for all shapes
-                if pygame.sprite.collide_circle(shape1, shape2): 
+                if pygame.sprite.collide_rect(shape1, shape2): 
 
                     consume(shape1, shape2)
                     # bounce(shape1, shape2)

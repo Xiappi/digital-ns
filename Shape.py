@@ -30,6 +30,7 @@ class Shape(pygame.sprite.Sprite):
             self.radius = radius
         
         # self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
         
         if (x == -1):
             xPos = 200
@@ -46,7 +47,10 @@ class Shape(pygame.sprite.Sprite):
 
         self.friction = -0.12
 
-        self.shapeType = ShapeTypes.CIRCLE         
+        self.shapeType = ShapeTypes.CIRCLE       
+        self.rect = None
+        self.mask = None  
+        self.imageString = None
         
     def __str__(self):
         return f"{self.uuid},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
@@ -69,8 +73,6 @@ class Shape(pygame.sprite.Sprite):
             self.acc.y = -self.acc.y
             self.vel.y = -self.vel.y
 
-        
-
     def randomize(self):
         self.acc.x = -ACC * random.random()
         self.acc.y = -ACC * random.random()
@@ -81,20 +83,15 @@ class Shape(pygame.sprite.Sprite):
 
     def draw(self, canvas, camera):
         
-        drawnShape = None
-
-        if self.shapeType == ShapeTypes.SQUARE:
-            drawnShape = pygame.draw.rect(canvas, self.color, pygame.Rect(self.pos.x - camera.offset.x, self.pos.y - camera.offset.y, self.radius,self.radius))
-        elif self.shapeType == ShapeTypes.TRIANGLE:
-            bottomLeft = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y)
-            bottomRight = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y + self.radius)
-            middleTop =  (self.pos.x - camera.offset.x - self.radius, self.pos.y - camera.offset.y + self.radius)
-
-            pygame.draw.polygon(canvas, self.color, points=[bottomLeft, bottomRight, middleTop])
+        # CIRCLE
+        if self.shapeType == ShapeTypes.CIRCLE or self.imageString == None:
+            return pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
             
-        else: 
-            drawnShape = pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
-        self.rect = drawnShape
+        # IMAGE
+        image = pygame.image.frombuffer(self.imageBytes,(200,200), 'RGB')
+        self.rect = image.get_rect(center = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y))
+        self.mask = pygame.mask.from_surface(self.image)
+        canvas.blit(self.image,(self.pos.x - camera.offset.x, self.pos.y - camera.offset.y) )
          
 
         

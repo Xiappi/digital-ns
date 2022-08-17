@@ -1,6 +1,7 @@
 from Shape import Shape
 from pygame.math import Vector2 as vec
 import ShapeTypes
+import pygame
 
 class YourShape(Shape):
 
@@ -21,10 +22,14 @@ class YourShape(Shape):
         self.acc = vec(5, 5)
 
         # How big yuour shape is
-        self.radius = 50
+        self.radius = 100
 
         # Where your shape in the game
         self.pos = vec((200, 200))
 
         # Your type of shape
-        self.shapeType = ShapeTypes.CIRCLE
+        self.shapeType = ShapeTypes.IMAGE
+
+        image = pygame.image.load('Images\myImage.png')
+        image = pygame.transform.scale(image, (250, 250))
+        self.imageString = pygame.image.tostring(image, 'RGB')

@@ -25,6 +25,7 @@ async def handleClient():
         if len(clientShapeEvent) > 0:
 
             data = pickle.dumps(clientShapeEvent[0].shape)
+            print(len(data))
             writer.write(data)
             await writer.drain()
             break

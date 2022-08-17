@@ -109,7 +109,6 @@ def startGame(loop):
 
         for entity in all_sprites:
             entity.draw(canvas, camera)
-
             text = font.render(entity.name, True, (255, 255, 255), None)
             textRect = text.get_rect()
             textRect.center = (entity.pos.x - camera.offset.x, entity.pos.y - camera.offset.y + 25 + entity.radius)
