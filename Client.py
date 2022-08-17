@@ -39,6 +39,9 @@ async def handleClient():
             shapes = pickle.loads(data)
             pygame.event.post(pygame.event.Event(
             EventTypes.SERVER_SEND_SHAPE, shapes=shapes))
+        except (pickle.UnpicklingError, KeyError, ValueError):
+            print("Error unpickling")
+            continue            
         except:
             Globals.IS_RUNNING == False
             break

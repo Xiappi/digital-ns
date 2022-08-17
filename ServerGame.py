@@ -15,7 +15,12 @@ import Server
 
 import Camera
 
-
+def smallPoints(all_sprites):
+    for i in range(Globals.STARTING_SHAPES):
+        xPos = random.randint(5, Globals.ARENA_WIDTH - 5)
+        yPos = random.randint(5, Globals.ARENA_HEIGHT - 5)
+        shape = Shape.Shape(name="", x=xPos, y=yPos, radius=3)
+        all_sprites.add(shape)
 
 def startGame(loop):
     # INITIALIZATION STUFF
@@ -42,11 +47,7 @@ def startGame(loop):
     follow = Camera.Follow(camera)
     camera.setMethod(follow)
 
-    for i in range(Globals.STARTING_SHAPES):
-        xPos = random.randint(5, Globals.ARENA_WIDTH - 5)
-        yPos = random.randint(5, Globals.ARENA_HEIGHT - 5)
-        shape = Shape.Shape(name="", x=xPos, y=yPos, radius=3)
-        all_sprites.add(shape)
+    smallPoints(all_sprites)
 
     while Globals.IS_RUNNING:
         if pygame.event.get(eventtype=pygame.QUIT):
@@ -59,6 +60,7 @@ def startGame(loop):
             if event.key == pygame.K_r:
                 for shape in all_sprites:
                     shape.kill()
+                smallPoints(all_sprites)
 
         deleteEvents = pygame.event.get(EventTypes.SERVER_DELETE_SHAPE)
         for event in deleteEvents:
