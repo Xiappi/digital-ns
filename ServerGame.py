@@ -16,7 +16,7 @@ import Server
 import Camera
 
 def smallPoints(all_sprites):
-    for i in range(Globals.STARTING_SHAPES):
+    for i in range(20):
         xPos = random.randint(5, Globals.ARENA_WIDTH - 5)
         yPos = random.randint(5, Globals.ARENA_HEIGHT - 5)
         shape = Shape.Shape(name="", x=xPos, y=yPos, radius=3)
