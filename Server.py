@@ -56,17 +56,15 @@ async def handleSending():
         
         event = events[0]
 
-        for i in range(len(connections) -1):
+        try:
+            for connection in connections:
             
-            try:
-                connection = connections[i]
                 shapeList = pickle.dumps(event.shapes)
                 connection.write(shapeList)
                 await connection.drain()
-
-            except Exception as e:
-                print(f"error with {connection.get_extra_info('peername')}")
-                print(e)
+        except Exception as e:
+            print(f"error with {connection.get_extra_info('peername')}")
+            print(e)
 
 
 def createShape(data):
