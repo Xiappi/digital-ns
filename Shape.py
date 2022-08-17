@@ -4,14 +4,12 @@ import pygame
 import random
 from pygame.math import Vector2 as vec
 from Globals import *
+import ShapeTypes
 
 ACC = 5
 WHITE = (255, 255, 255)
 
 class Shape(pygame.sprite.Sprite):
-
-    def drawMe(self, canvas, camera):
-        return pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
 
     def __init__(self, name="Default Name", uuid=0, x=-1, y=-1, radius=-1):
         super().__init__()
@@ -47,8 +45,8 @@ class Shape(pygame.sprite.Sprite):
         self.acc = vec(0, 0)
 
         self.friction = -0.12
-        
-        self.drawLambda = self.drawMe
+
+        self.shapeType = ShapeTypes.CIRCLE         
         
     def __str__(self):
         return f"{self.uuid},{round(self.pos.x)},{round(self.pos.y)},{self.radius}"
@@ -82,7 +80,22 @@ class Shape(pygame.sprite.Sprite):
 
 
     def draw(self, canvas, camera):
-        self.rect = self.drawMe(canvas, camera)
+        
+        drawnShape = None
+
+        if self.shapeType == ShapeTypes.SQUARE:
+            drawnShape = pygame.draw.rect(canvas, self.color, pygame.Rect(self.pos.x - camera.offset.x, self.pos.y - camera.offset.y, self.radius,self.radius))
+        elif self.shapeType == ShapeTypes.TRIANGLE:
+            bottomLeft = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y)
+            bottomRight = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y + self.radius)
+            middleTop =  (self.pos.x - camera.offset.x - self.radius, self.pos.y - camera.offset.y + self.radius)
+
+            pygame.draw.polygon(canvas, self.color, points=[bottomLeft, bottomRight, middleTop])
+            
+        else: 
+            drawnShape = pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
+        self.rect = drawnShape
+         
 
         
     

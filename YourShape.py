@@ -1,6 +1,6 @@
 from Shape import Shape
 from pygame.math import Vector2 as vec
-import pygame
+import ShapeTypes
 
 class YourShape(Shape):
 
@@ -9,7 +9,6 @@ class YourShape(Shape):
          
     def __init__(self) -> None:
         super().__init__()
-        self.drawLambda =  self.drawMe
 
         # The Name of your shape
         self.name = "Zac"
@@ -22,7 +21,10 @@ class YourShape(Shape):
         self.acc = vec(5, 5)
 
         # How big yuour shape is
-        self.radius = 5
+        self.radius = 50
 
         # Where your shape in the game
         self.pos = vec((0, 0))
+
+        # Your type of shape
+        self.shapeType = ShapeTypes.TRIANGLE

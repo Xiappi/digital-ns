@@ -1,14 +1,8 @@
 import asyncio
-from ctypes import sizeof
-from http import client
 import pickle
 import EventTypes
 import pygame
 import Globals
-from YourShape import YourShape
-
-
-
 
 async def handleClient():
     pygame.init()
@@ -22,9 +16,6 @@ async def handleClient():
         pygame.event.post(pygame.event.Event(pygame.QUIT))
         return
 
-    print("checke vent")
-
-    
     attempts = 0
 
     while attempts < 3:
