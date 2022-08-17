@@ -113,7 +113,7 @@ def startGame(loop):
 
             text = font.render(entity.name, True, (255, 255, 255), None)
             textRect = text.get_rect()
-            textRect.center = (entity.pos.x - camera.offset.x, entity.pos.y - camera.offset.y + 25 + entity.radius)
+            textRect.center = (entity.pos[0] - camera.offset.x, entity.pos[1] - camera.offset.y + 25 + entity.radius)
             canvas.blit(text, textRect)
 
         # draw arena bounds

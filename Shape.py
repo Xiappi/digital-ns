@@ -94,18 +94,19 @@ class Shape(pygame.sprite.Sprite):
     def draw(self, canvas, camera):
         
         drawnShape = None
-
+        xPos = self.pos[0]
+        yPos = self.pos[1]
         if self.shapeType == ShapeTypes.SQUARE:
-            drawnShape = pygame.draw.rect(canvas, self.color, pygame.Rect(self.pos.x - camera.offset.x, self.pos.y - camera.offset.y, self.radius,self.radius))
+            drawnShape = pygame.draw.rect(canvas, self.color, pygame.Rect(xPos- camera.offset.x, yPos - camera.offset.y, self.radius,self.radius))
         elif self.shapeType == ShapeTypes.TRIANGLE:
-            bottomLeft = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y)
-            bottomRight = (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y + self.radius)
-            middleTop =  (self.pos.x - camera.offset.x - self.radius, self.pos.y - camera.offset.y + self.radius)
+            bottomLeft = (xPos - camera.offset.x, yPos - camera.offset.y)
+            bottomRight = (xPos - camera.offset.x, yPos - camera.offset.y + self.radius)
+            middleTop =  (xPos - camera.offset.x - self.radius, yPos - camera.offset.y + self.radius)
 
             pygame.draw.polygon(canvas, self.color, points=[bottomLeft, bottomRight, middleTop])
             
         else: 
-            drawnShape = pygame.draw.circle(canvas, self.color, (self.pos.x - camera.offset.x, self.pos.y - camera.offset.y), self.radius)
+            drawnShape = pygame.draw.circle(canvas, self.color, (xPos - camera.offset.x, yPos - camera.offset.y), self.radius)
         self.rect = drawnShape
          
 
