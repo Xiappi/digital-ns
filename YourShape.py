@@ -4,27 +4,24 @@ import ShapeTypes
 
 class YourShape(Shape):
 
-    # def drawMe(self, canvas, camera):
-    #      return pygame.draw.rect(canvas, self.color, pygame.Rect(self.pos.x - camera.offset.x, self.pos.y - camera.offset.y, 25,25))
-         
     def __init__(self) -> None:
         super().__init__()
 
-        # The Name of your shape
-        self.name = "Zac"
+        # # The Name of your shape
+        # self.name = ""
 
-        # The color of your shape
-        # (Red, Blue, Green)
-        self.color = (0, 0, 0)
+        # # The color of your shape
+        # # (Red, Blue, Green)
+        # self.color = (0, 0, 0)
 
-        # How fast your shape is
-        self.acc = vec(5, 5)
+        # # How fast your shape is
+        # self.acc = vec(5, 5)
 
-        # How big yuour shape is
-        self.radius = 500
+        # # How big yuour shape is
+        # self.radius = 100
 
-        # Where your shape in the game
-        self.pos = vec((200, 200))
+        # # Where your shape in the game
+        # self.pos = vec((200, 200))
 
         # Your type of shape
-        self.shapeType = ShapeTypes.CIRCLE
+        # self.shapeType = ShapeTypes.SQUARE

@@ -11,7 +11,7 @@ WHITE = (255, 255, 255)
 
 class Shape(pygame.sprite.Sprite):
 
-    def __init__(self, name="Default Name", uuid=0, x=-1, y=-1, radius=-1):
+    def __init__(self, name="", uuid=0, x=-1, y=-1, radius=-1):
         super().__init__()
 
         self.name = name

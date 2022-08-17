@@ -79,7 +79,6 @@ def startGame(loop):
         for event in pygame.event.get(EventTypes.CLIENT_SEND_SHAPE):
             print(str(event))
             clientShape = event.shape
-            clientShape.randomize()
             all_sprites.add(clientShape)
 
         physics.update(all_sprites)
