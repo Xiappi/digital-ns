@@ -1,3 +1,4 @@
+from ast import Global
 from uuid import uuid4
 
 import pygame
@@ -84,6 +85,7 @@ class Shape(pygame.sprite.Sprite):
     def randomize(self):
         self.acc.x = -ACC * random.random()
         self.acc.y = -ACC * random.random()
+        self.pos = (random.randrange(100, WINDOW_WIDTH-100), random.randrange(100, WINDOW_HEIGHT -100))
 
     def getBound(self):
         return self.radius
