@@ -24,4 +24,4 @@ class YourShape(Shape):
         # self.pos = vec((200, 200))
 
         # Your type of shape
-        self.shapeType = ShapeTypes.Circle
+        # self.shapeType = ShapeTypes.CIRCLE
